@@ -26,29 +26,35 @@ Soutput, cuja remoção dos gaps de rj reproduza a seqüência sj dada.
 #include <string.h>
 
 // belle
-#define ALPHA 2
-#define BETA 0
-#define DELTA -1
+#define ALPHA 2 // A + A
+#define BETA 0 // A + T
+#define DELTA -1 // A + - // - + -
 
 // FUNÇÕES PARA FAZER
-// Terminar preencher com gaps, atualmente ela só verifica isoladamente 2 pares,
-// mas por exemplo se tiverem 3, adicionar gap na 2 sequencia pra dar match com
-// a 3 pode atrapalhar o match com a 1, o que a gente faz nesses casos?
-// exato TOMA NO CU
-void calcular_score(char sequencias[10][100], int lin, int col) {
+
+// Copia melhor alinhamento para uma variavel
+char salvarMelhorAlinhamento(char alinhamento[][102], char melhorAlinhamento[][102]){
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 102; j++) {
+      melhorAlinhamento[i][j] = alinhamento[i][j];
+    }
+  }
+}
+
+void calcular_score(char sequencias[10][102], int lin, int col) {
 	// calcular colunas
 
 	//   i0 i1 i2
 	// j0 A, B, C
 	// j1 D, E, F
 	// j2 G, H, I
-	// j3 J, K, L
 
 	for (int i = 0; i < col; i ++){
         for (int j = 0; j < lin; j++){
-            int c = j;
+            int c = i;
+
             while(col > c){
-                printf("%c + %c = 0\n", sequencias[i][j], sequencias[c][j]);
+                printf("%c + %c = 0\n", sequencias[j][i], sequencias[c][i]);
                 c++;
             }
         }
@@ -72,49 +78,6 @@ int verificaCharValidos(char seq[]) {
 
   return 1;
 }
-
-// Preenche as linha da matriz de string. Encerra após 10 sequências ou até o
-// usuário digitar -1.
-// int preencherSequencias(char sequencia[][100], int *cont, int *maxSize) {
-//
-//   int tempSize;
-//
-//  for (int i = 0; i < 10; i++) {
-//    printf("%dº sequencia: ", i + 1);
-//    fgets(sequencia[i], 100, stdin);
-//
-//    if (strcmp(sequencia[i], "-1\n") == 0) {
-//      printf("sequencias encerradas\n");
-//      return 0;
-//    }
-//
-//    if (!verificaCharValidos(sequencia[i])) {
-//      printf("A sequencia deve conter apenas letras!\n");
-//      i -= 1;
-//      continue;
-//    }
-//
-//    tempSize = strlen(sequencia[i]) - 1;
-//
-//    if (*maxSize < tempSize) {
-//      *maxSize = tempSize;
-//    }
-
-//    *cont += 1;
-//  }
-// }
-
-// imprime a bomba das sequencias
-// void imprimirSequencias(char sequencia[][100], int cont) {
-//
-//  for (int i = 0; i < cont; i++) {
-//    if (strcmp(sequencia[i], "-1\n") == 0) {
-//      break;
-//    }
-//
-//    printf("%s\n", sequencia[i]);
-//  }
-//}
 
 // Essa função recebe o índice da maior sequencia e preenche as sequecnias
 // menores com gaps no FINAL
@@ -185,30 +148,15 @@ int main() {
   int sequencias_count = 0;
   int max_string_size = 0;
 
-//   char sequencias[10][100];
-
-  // Ponteiros:
-//   char(*pSeq)[100] = sequencias;
-//   int *pseqCont = &sequencias_count;
-//   int *maxSize = &max_string_size;
-
-//   printf("Por favor, digite as sequências - max 10.\n(digite -1 para "
-//          "encerrar.)\n\n");
-//   preencherSequencias(pSeq, pseqCont, maxSize);
-
-//   preencheGapFinal(pSeq, sequencias_count, max_string_size);
-
-//   imprimirSequencias(sequencias, sequencias_count);
-
-  printf("Digite o tamanho do conjunto de sequencias (max: 10): ");
+  printf("Digite o tamanho do conjunto de sequencias (min - 2, max - 10): ");
   scanf("%d", &sequencias_count);
 
-  if (sequencias_count > 10 || sequencias_count < 1){
-    printf("Tamanho invalido! (Máximo - 10, Mínimo - 1)\n");
-    return 0;
+  while (sequencias_count < 2 || sequencias_count > 10) {
+    printf("\nDigite o tamanho do conjunto de sequencias (min - 2, max - 10): ");
+    scanf("%d", &sequencias_count);
   }
 
-  char sequencias[sequencias_count][100];
+  char sequencias[sequencias_count][102];
 
   printf("\nLembre-se! Tamanho da sequência não pode ser maior que 100 caracteres!\n\n");
 
@@ -216,6 +164,12 @@ int main() {
 
     printf("Digite a sequencia %dº: ", i + 1);
     scanf("%s", sequencias[i]);
+
+    if (verificaCharValidos(sequencias[i]) == 0) {
+      printf("A sequencia deve conter apenas letras!\n");
+      i -= 1;
+      continue;
+    }
 
     size_t sequencia_size = strlen(sequencias[i]);
 
@@ -229,9 +183,12 @@ int main() {
 
   printf("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n\n", sequencias_count, max_string_size);
 
-  //preencher_com_gaps(&sequencias);
+  char melhorAlinhamento[10][102];
+  char (*pMelhorAlinhamento)[102] = melhorAlinhamento;
 
-  for (int i = 0; i < sequencias_count; i++) printf("Sequencia %d: %s\n", i + 1, sequencias[i]);
+  salvarMelhorAlinhamento(sequencias, pMelhorAlinhamento);
+
+  for (int i = 0; i < sequencias_count; i++) printf("Melhor %d: %s\n", i + 1, melhorAlinhamento[i]);
 
   printf("\nContando o alinhamento...\n");
 
@@ -241,5 +198,3 @@ int main() {
 	
   return 0;
 }
-
-// 🍍 corno
