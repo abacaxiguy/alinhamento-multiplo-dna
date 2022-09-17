@@ -95,17 +95,27 @@ void preencheGapFinal(char sequencia[][100], int cont, int maxSize) {
   }
 }
 
-// Essa função recebe uma sequencia, o tamanho max da sequencia e um índice.
-// A partir do índice, ela atribui os valores do índice atual ao próximo índice
-// até o final da sequencia. Depois, acrescenta no índice informado um gap.
-void trocaPosicaoGapFinal(int indice, int max, char *vetor) {
+//Essa função recebe uma sequencia, o tamanho max da sequencia e um índice.
+//coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
+void trocaPosicaoGapFinal(int indice, int max, char *vetor){
 
-  for (int i = max - 1; i > indice; i--) {
+    int rodando = 1;
+    
+    do{
+        
+        for(int i = max-1; i > indice; i--){
+            vetor[i] = vetor[i-1];
+        }   
 
-    vetor[i] = vetor[i - 1];
-  }
+        vetor[indice] = '-';
 
-  vetor[indice] = '-';
+        if(vetor[max-1] != '-'){
+            rodando = 0;
+        } 
+
+        indice+=1;
+
+    }while(rodando);
 }
 
 //(INCOMPLETA)
