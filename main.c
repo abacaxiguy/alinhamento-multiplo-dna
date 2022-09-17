@@ -110,19 +110,16 @@ int verificaCharValidos(char seq[])
 
 // Essa função recebe o índice da maior sequencia e preenche as sequecnias
 // menores com gaps no FINAL
-void preencheGapFinal(char sequencia[][100], int cont, int maxSize)
-{
+void preencheGapFinal(char seq[][102], int cont, int maxSize){
 
   for (int x = 0; x < cont; x++)
   {
     for (int y = 0; y < maxSize; y++)
     {
 
-      if (sequencia[x][y] == ' ' || sequencia[x][y] == '\n' ||
-          sequencia[x][y] == '\0')
-      {
-        sequencia[x][y] = '-';
-        sequencia[x][y + 1] = '\0';
+      if (seq[x][y] == ' ' || seq[x][y] == '\0'){
+        seq[x][y] = '-';
+        seq[x][y + 1] = '\0';
       }
     }
   }
@@ -153,51 +150,105 @@ void trocaPosicaoGapFinal(int indice, int max, char *vetor)
     indice += 1;
 
   } while (rodando);
+
 }
+
+
+int verificaMatch(char seqComp[], char seqTotal[][102], int indice){
+
+
+
+}
+
 
 //(INCOMPLETA)
 // Percorre a matriz de sequencias linha a linha, e compara a linha do índice
 // atual com a de baixo.
-void alinhaSequencias(char seq[][100], int max, int nSeq)
-{
 
-  for (int x = 0; x < nSeq; x++)
-  {
+//Se dois alinhamentos tiverem o mesmo numero de match's fica com o segundo
+//Se dois alinhamentos tiverem match's diferentes, mantém o que tiver mais.
 
-    for (int y = 0; y < max; y++)
-    {
+void alinhaSequencias(char seq[][102], int max, int nSeq){
 
-      // Se a proteina da sequencia atual, for igual a que está embaixo. Não faz
-      // porra nenhuma.
-      if (seq[x][y] == seq[x + 1][y])
-      {
-        continue;
-      }
-      else
-      {
+    int nomatches = 0; //variaávle de verificação.
+    char seqTemp[102];
 
-        // verifica Se ao adicionar um gap a proteina do índice atual ocorre um
-        // match com a proteina da sequecnia de baixo. Se sim, adiciona o gap.
-        // Também verifica se há GAPS DISPONÍVEIS(Estão sempre no final da
-        // sequencia). para realizar a operação
+    for(int x = 0; x < nSeq; x++){ //Percorre as sequencias (linhas)
+    
+        //1- verifica se tem gap no final
+        //2- testar a partir da posição que não tem match  
+        //3- se conseguir mais match que o original, salva essa posição.
+        // 4- tenta em outra posição no anterior, se conseguir mais match, mantém até acabar os numeros.
+        //5 - vai pra proxima sequencia e repete
+        //tentar da match a partir da 1 sequencia se conseguir para
+        //verificar se ta melhor agora do que antes
 
-        // Verifica linha de cima:
-        if (seq[x][y] == seq[x + 1][y + 1] && seq[x][max - 1] == '-')
-        {
-          trocaPosicaoGapFinal(y, max, seq[x]);
+        //  verificar se há gaps p/ realizar o shift;
+          if(seq[x][max-1] != '-'){
+              continue;
+          }
 
-          // Verifica se há um match se adicionar gap no índice da linha de
-          // baixo:
+        for(int y = 0; y < max; y++){ //Percorre os caracteres da sequencia atual (colunas)
+
+            for(int j = 0; j < max; j++){ //percorre as sequencias (linhas) pra comparar os caracteres (colunas)
+                  // printf("\n j : %d\n", j);
+                if(j == x){ //pulamos a sequencia atual. Não comparamos uma sequencia com ela mesma.
+                  // printf("\nj: %d é igual a x: %d\n", j, x);
+                  continue;
+                }
+
+                if(seq[x][y] == seq[j][y]){ //Se der match com alguém finaliza. Não damos shift (por enquanto) se ja tiver dado um match
+                  //  printf("\ndeu match caracter j: %c y:%c\n", seq[j][x], seq[j][y]);
+                    break;
+                }
+
+                //Se a posição não deu match, ela está eletiva a receber gaps.
+                //modificamos a variável de verificação (no matches) e encerramos as comparações.
+
+                // printf("\nn deu match :c\n");
+                nomatches = 1;
+                break;
+            }
+
+          //   //Se o caracter não deu match, então damos um gap.
+            if(nomatches){
+
+              //Passa a sequencia p/um vetor temporário
+              strcpy(seqTemp, seq[x]);
+
+              //dá o gap nessa posição, mas passando o vetor temporário.
+              trocaPosicaoGapFinal(y, max, seqTemp);
+
+              //verifica se a nova configuração conseguiu um match.
+              //Se conseguir, usa essa nova organização
+              //Se não, não faz nada
+              for(int k = y; k < max; k++){
+                  for(int x2 = 0; x2 < nSeq; x2++){
+
+                      if(x2 == x){
+                        continue;
+                      }
+
+                      if(seqTemp[k] == seq[x2][k]){
+                            strcpy(seq[x], seqTemp);
+                            break;
+                      }
+
+                  }
+              }
+
+              nomatches = 0; //Reseta a variável de verificação
+              break;
+           }
+
         }
-        else if (seq[x + 1][y] == seq[x][y + 1] &&
-                 seq[x + 1][max - 1] == '-')
-        {
-          trocaPosicaoGapFinal(y, max, seq[x + 1]);
-        }
-      }
+
     }
-  }
+
 }
+
+
+
 
 int main() {
   int sequencias_count = 0;
@@ -249,13 +300,20 @@ int main() {
 
   // for (int i = 0; i < sequencias_count; i++) printf("Melhor %d: %s\n", i + 1, melhorAlinhamento[i]);
 
-  printf("Contando o alinhamento...\n");
 
-  int score = calcular_score(sequencias, sequencias_count, max_string_size);
+  //IMPRIME O RESULTADO DO ALINHAMENTO==========================================================================
 
-  printf("\nScore: %d\n", score);
+  printf("Sequencia inicial: \n");
+  imprimirSequencia(sequencias, sequencias_count);
+
+  // int score = calcular_score(sequencias, sequencias_count, max_string_size);
+
+  // printf("\nScore: %d\n", score);
 
   printf("\nAlinhamento final:\n\n");
+  
+  preencheGapFinal(sequencias, sequencias_count, max_string_size);
+  alinhaSequencias(sequencias, max_string_size, sequencias_count); 
 
   imprimirSequencia(sequencias, sequencias_count);
 
