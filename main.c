@@ -106,34 +106,26 @@ int verificaCharValidos(char seq[])
 // menores com gaps no FINAL
 void preencheGapFinal(char seq[][103], int cont, int *maxSize){
   // checar se todas as sequencias possuem o mesmo tamanho
-  int mesmoTamanho = 1;
+
+  // preencher dois gaps no final de cada sequencia
   for (int i = 0; i < cont; i++){
-    if (strlen(seq[i]) != *maxSize){
-      mesmoTamanho = 0;
-      break;
-    }
+    seq[i][*maxSize] = '-';
+    seq[i][*maxSize + 1] = '-';
+    seq[i][*maxSize + 2] = '\0';
   }
 
-  if (mesmoTamanho) {
-    // preencher dois gaps no final de cada sequencia
-    for (int i = 0; i < cont; i++){
-      seq[i][*maxSize] = '-';
-      seq[i][*maxSize + 1] = '-';
-      seq[i][*maxSize + 2] = '\0';
-    }
-    *maxSize += 2;
-  }
+  *maxSize += 2;
+}
 
-  else {
-    for (int x = 0; x < cont; x++)
-    {
-      for (int y = 0; y < *maxSize; y++)
-      {
-        if (seq[x][y] == ' ' || seq[x][y] == '\0'){
-          seq[x][y] = '-';
-          seq[x][y + 1] = '\0';
-        }
+void preencherGapDiferente(char seq[][103], int cont, int *maxSize){
+  for (int x = 0; x < cont; x++){
+    for (int y = 0; y < *maxSize; y++){
+
+      if (seq[x][y] == ' ' || seq[x][y] == '\0'){
+        seq[x][y] = '-';
+        seq[x][y + 1] = '\0';
       }
+
     }
   }
 }
@@ -302,8 +294,22 @@ int main() {
   imprimirSequencia(sequencias, sequencias_count);
 
   printf("\nAlinhamento final:\n\n");
+
+  int mesmoTamanho = 1;
   
-  preencheGapFinal(sequencias, sequencias_count, &max_string_size);
+  for (int i = 0; i < sequencias_count; i++)
+  {
+    if (strlen(sequencias[i]) != max_string_size)
+    {
+      mesmoTamanho = 0;
+      break;
+    }
+  }
+
+  if (mesmoTamanho) preencheGapFinal(sequencias, sequencias_count, &max_string_size);
+
+  else preencherGapDiferente(sequencias, sequencias_count, &max_string_size); // em manutenção
+
   alinhaSequencias(sequencias, max_string_size, sequencias_count); 
 
   imprimirSequencia(sequencias, sequencias_count);
