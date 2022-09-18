@@ -254,25 +254,26 @@ int main() {
   int sequencias_count = 0;
   int max_string_size = 0;
 
-  printf("Digite o tamanho do conjunto de sequencias (min - 2, max - 10): ");
+  printf("\n\t******** Alinhamento multiplo de DNA  ********\n\n");
+
+  printf("Por favor, digite o tamanho do conjunto de sequencias (min: 2, max: 10): ");
   scanf("%d", &sequencias_count);
-
-  while (sequencias_count < 2 || sequencias_count > 10) {
-    printf("\nDigite o tamanho do conjunto de sequencias (min - 2, max - 10): ");
-    scanf("%d", &sequencias_count);
+  
+  while((sequencias_count < 2) || (sequencias_count > 10)){
+      system("clear");
+      printf("Tamanho invalido! Escolha outro tamanho (min: 2, max: 10):\n");
+      scanf("%d", &sequencias_count);
   }
-
+  
   char sequencias[sequencias_count][102];
-
-  printf("\nLembre-se! Tamanho da sequência não pode ser maior que 100 caracteres!\n\n");
-
+  
   for (int i = 0; i < sequencias_count; i++) {
-
-    printf("Digite a sequencia %dº: ", i + 1);
+    system("clear");
+    printf("Digite a sequencia %dº (max: 100 caracteres): \n", i + 1);
     scanf("%s", sequencias[i]);
 
     if (!verificaCharValidos(sequencias[i])){
-      printf("A sequencia deve conter apenas letras!\n");
+      printf("Sequencia invalida! A sequencia deve conter apenas letras!\n");
       i -= 1;
       continue;
     }
@@ -289,6 +290,7 @@ int main() {
       max_string_size = sequencia_size;
   }
 
+  system("clear");
   printf("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n", sequencias_count, max_string_size);
 
   // codigo pra salvar a melhor sequencia
@@ -303,7 +305,7 @@ int main() {
 
   //IMPRIME O RESULTADO DO ALINHAMENTO==========================================================================
 
-  printf("Sequencia inicial: \n");
+  printf("\nSequencia inicial: \n\n");
   imprimirSequencia(sequencias, sequencias_count);
 
   // int score = calcular_score(sequencias, sequencias_count, max_string_size);
@@ -317,5 +319,8 @@ int main() {
 
   imprimirSequencia(sequencias, sequencias_count);
 
+  printf("\nScore:\n\n");
+  //colocar a função score
+  
   return 0;
 }
