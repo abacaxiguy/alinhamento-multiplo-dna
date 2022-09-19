@@ -132,7 +132,7 @@ void preencherGapDiferente(char seq[][103], int cont, int *maxSize){
 
 // Essa função recebe uma sequencia, o tamanho max da sequencia e um índice.
 // coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
-void trocaPosicaoGapFinal(int indice, int max, char *vetor)
+void trocaPosicaoGapFinal(int indice, int *max, char *vetor)
 {
 
   int rodando = 1;
@@ -140,14 +140,14 @@ void trocaPosicaoGapFinal(int indice, int max, char *vetor)
   do
   {
 
-    for (int i = max - 1; i > indice; i--)
+    for (int i = *max - 1; i > indice; i--)
     {
       vetor[i] = vetor[i - 1];
     }
 
     vetor[indice] = '-';
 
-    if (vetor[max - 1] != '-')
+    if (vetor[*max - 1] != '-')
     {
       rodando = 0;
     }
@@ -163,7 +163,7 @@ void trocaPosicaoGapFinal(int indice, int max, char *vetor)
 // atual com a de baixo.
 // Se dois alinhamentos tiverem o mesmo numero de match's fica com o segundo
 // Se dois alinhamentos tiverem match's diferentes, mantém o que tiver mais.
-void alinhaSequencias(char seq[][103], int max, int nSeq){
+void alinhaSequencias(char seq[][103], int *max, int nSeq){
 
     int nomatches = 0; // variável de verificação.
     char seqTemp[103];
@@ -180,13 +180,13 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
         // verificar se ta melhor agora do que antes
 
           // verificar se há gaps p/ realizar o shift;
-          if(seq[x][max-1] != '-'){
+          if(seq[x][*max-1] != '-'){
               continue;
           }
 
-        for(int y = 0; y < max; y++){ //Percorre os caracteres da sequencia atual (colunas)
+        for(int y = 0; y < *max; y++){ //Percorre os caracteres da sequencia atual (colunas)
 
-            for(int j = 0; j < max; j++){ //percorre as sequencias (linhas) pra comparar os caracteres (colunas)
+            for(int j = 0; j < *max; j++){ //percorre as sequencias (linhas) pra comparar os caracteres (colunas)
                   // printf("\n j : %d\n", j);
                 if(j == x){ //pulamos a sequencia atual. Não comparamos uma sequencia com ela mesma.
                   // printf("\nj: %d é igual a x: %d\n", j, x);
@@ -218,7 +218,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
               // verifica se a nova configuração conseguiu um match.
               // Se conseguir, usa essa nova organização
               // Se não, não faz nada
-              for(int k = y; k < max; k++){
+              for(int k = y; k < *max; k++){
                   for(int x2 = 0; x2 < nSeq; x2++){
 
                       if(x2 == x) continue;
@@ -240,9 +240,9 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
 // Pega a sequencia enviada pelo usuario e verifica se é valida
 void pegandoSequencia(char sequencias[][103], int sequencias_count, int *max_string_size)
 {
+  system("clear");
   for (int i = 0; i < sequencias_count; i++)
   {
-    system("clear");
     printf("Digite a sequencia %dº (max: 100 caracteres): \n", i + 1);
     scanf("%s", sequencias[i]);
 
@@ -310,7 +310,7 @@ int main() {
 
   else preencherGapDiferente(sequencias, sequencias_count, &max_string_size); // em manutenção
 
-  alinhaSequencias(sequencias, max_string_size, sequencias_count); 
+  alinhaSequencias(sequencias, &max_string_size, sequencias_count); 
 
   imprimirSequencia(sequencias, sequencias_count);
 
