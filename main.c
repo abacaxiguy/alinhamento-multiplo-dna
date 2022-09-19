@@ -134,7 +134,6 @@ void preencherGapDiferente(char seq[][103], int cont, int *maxSize){
 // coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
 void trocaPosicaoGapFinal(int indice, int *max, char *vetor)
 {
-
   int rodando = 1;
 
   do
@@ -163,10 +162,13 @@ void trocaPosicaoGapFinal(int indice, int *max, char *vetor)
 // atual com a de baixo.
 // Se dois alinhamentos tiverem o mesmo numero de match's fica com o segundo
 // Se dois alinhamentos tiverem match's diferentes, mantém o que tiver mais.
-void alinhaSequencias(char seq[][103], int *max, int nSeq){
+
+void alinhaSequencias(char seq[][103], int max, int nSeq){
 
     int nomatches = 0; // variável de verificação.
     char seqTemp[103];
+
+    printf("\nmax: %d\n", max);
 
     for(int x = 0; x < nSeq; x++){ //Percorre as sequencias (linhas)
     
@@ -180,17 +182,21 @@ void alinhaSequencias(char seq[][103], int *max, int nSeq){
         // verificar se ta melhor agora do que antes
 
           // verificar se há gaps p/ realizar o shift;
-          if(seq[x][*max-1] != '-'){
+
+          if(seq[x][max-1] != '-'){ //O VERIFICA GAPS FUNCIONA
               continue;
           }
 
-        for(int y = 0; y < *max; y++){ //Percorre os caracteres da sequencia atual (colunas)
+          for(int y = 0; y < max; y++){ //Percorre os caracteres da sequencia atual (colunas)
 
-            for(int j = 0; j < *max; j++){ //percorre as sequencias (linhas) pra comparar os caracteres (colunas)
-                  // printf("\n j : %d\n", j);
+            for(int j = 0; j < max; j++){ //percorre as sequencias (linhas) pra comparar os caracteres (colunas)
+
                 if(j == x){ //pulamos a sequencia atual. Não comparamos uma sequencia com ela mesma.
-                  // printf("\nj: %d é igual a x: %d\n", j, x);
                   continue;
+                }
+
+                if(seq[x][y] == '-'){ //Encerramos a sequencia atual. Não há mais caracteres para se comparar.
+                  break;
                 }
 
                 if(seq[x][y] == seq[j][y]){ //Se der match com alguém finaliza. Não damos shift (por enquanto) se ja tiver dado um match
@@ -201,16 +207,15 @@ void alinhaSequencias(char seq[][103], int *max, int nSeq){
                 // Se a posição não deu match, ela está eletiva a receber gaps.
                 // modificamos a variável de verificação (no matches) e encerramos as comparações.
 
-                // printf("\nn deu match :c\n");
-                nomatches = 1;
+                nomatches = 1;//FUNCIONA
                 break;
             }
 
-            // Se o caracter não deu match, então damos um gap.
+             // Se o caracter não deu match, então damos um gap.
             if(nomatches){
 
-              // Passa a sequencia p/um vetor temporário
-              strcpy(seqTemp, seq[x]);
+              strcpy(seqTemp, seq[x]); // Passa a sequencia p/um vetor temporário
+
 
               // Dá o gap nessa posição, mas passando o vetor temporário.
               trocaPosicaoGapFinal(y, max, seqTemp);
@@ -218,22 +223,25 @@ void alinhaSequencias(char seq[][103], int *max, int nSeq){
               // verifica se a nova configuração conseguiu um match.
               // Se conseguir, usa essa nova organização
               // Se não, não faz nada
-              for(int k = y; k < *max; k++){
-                  for(int x2 = 0; x2 < nSeq; x2++){
 
-                      if(x2 == x) continue;
+                for(int k = y; k < max; k++){
+                    for(int x2 = 0; x2 < nSeq; x2++){
 
-                      if(seqTemp[k] == seq[x2][k]){
-                            strcpy(seq[x], seqTemp);
-                            break;
-                      }
+                        if(x2 == x) continue;
 
-                  }
-              }
-              nomatches = 0; // Reseta a variável de verificação
-              break;
-           }
-        }
+
+                        if(seqTemp[k] == seq[x2][k]){
+                              strcpy(seq[x], seqTemp);
+                              break;
+                        }
+
+                    }
+                }
+                nomatches = 0; // Reseta a variável de verificação
+                break;
+            }
+          }
+
     }
 }
 
@@ -310,7 +318,11 @@ int main() {
 
   else preencherGapDiferente(sequencias, sequencias_count, &max_string_size); // em manutenção
 
-  alinhaSequencias(sequencias, &max_string_size, sequencias_count); 
+
+  imprimirSequencia(sequencias, sequencias_count);
+
+  alinhaSequencias(sequencias, max_string_size, sequencias_count); 
+
 
   imprimirSequencia(sequencias, sequencias_count);
 
