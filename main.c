@@ -132,21 +132,21 @@ void preencherGapDiferente(char seq[][103], int cont, int *maxSize){
 
 // Essa função recebe uma sequencia, o tamanho max da sequencia e um índice.
 // coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
-void trocaPosicaoGapFinal(int indice, int max, char *vetor)
+void trocaPosicaoGapFinal(int indice, int *max, char *vetor)
 {
   int rodando = 1;
 
   do
   {
 
-    for (int i = max - 1; i > indice; i--)
+    for (int i = *max - 1; i > indice; i--)
     {
       vetor[i] = vetor[i - 1];
     }
 
     vetor[indice] = '-';
 
-    if (vetor[max - 1] != '-')
+    if (vetor[*max - 1] != '-')
     {
       rodando = 0;
     }
@@ -162,6 +162,7 @@ void trocaPosicaoGapFinal(int indice, int max, char *vetor)
 // atual com a de baixo.
 // Se dois alinhamentos tiverem o mesmo numero de match's fica com o segundo
 // Se dois alinhamentos tiverem match's diferentes, mantém o que tiver mais.
+
 void alinhaSequencias(char seq[][103], int max, int nSeq){
 
     int nomatches = 0; // variável de verificação.
@@ -181,6 +182,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
         // verificar se ta melhor agora do que antes
 
           // verificar se há gaps p/ realizar o shift;
+
           if(seq[x][max-1] != '-'){ //O VERIFICA GAPS FUNCIONA
               continue;
           }
@@ -204,6 +206,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
 
                 // Se a posição não deu match, ela está eletiva a receber gaps.
                 // modificamos a variável de verificação (no matches) e encerramos as comparações.
+
                 nomatches = 1;//FUNCIONA
                 break;
             }
@@ -213,16 +216,19 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
 
               strcpy(seqTemp, seq[x]); // Passa a sequencia p/um vetor temporário
 
+
               // Dá o gap nessa posição, mas passando o vetor temporário.
               trocaPosicaoGapFinal(y, max, seqTemp);
 
               // verifica se a nova configuração conseguiu um match.
               // Se conseguir, usa essa nova organização
               // Se não, não faz nada
+
                 for(int k = y; k < max; k++){
                     for(int x2 = 0; x2 < nSeq; x2++){
 
                         if(x2 == x) continue;
+
 
                         if(seqTemp[k] == seq[x2][k]){
                               strcpy(seq[x], seqTemp);
@@ -235,6 +241,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
                 break;
             }
           }
+
     }
 }
 
@@ -311,9 +318,11 @@ int main() {
 
   else preencherGapDiferente(sequencias, sequencias_count, &max_string_size); // em manutenção
 
+
   imprimirSequencia(sequencias, sequencias_count);
 
   alinhaSequencias(sequencias, max_string_size, sequencias_count); 
+
 
   imprimirSequencia(sequencias, sequencias_count);
 
