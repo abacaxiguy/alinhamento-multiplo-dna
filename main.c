@@ -104,49 +104,65 @@ int verificaCharValidos(char seq[])
 
 // Essa função recebe o índice da maior sequencia e preenche as sequecnias
 // menores com gaps no FINAL
-void preencheGapFinal(char seq[][103], int cont, int *maxSize){
+void preencheGapFinal(char seq[][103], int cont, int *maxSize)
+{
   // checar se todas as sequencias possuem o mesmo tamanho
-
-  // preencher dois gaps no final de cada sequencia
-  for (int i = 0; i < cont; i++){
-    seq[i][*maxSize] = '-';
-    seq[i][*maxSize + 1] = '-';
-    seq[i][*maxSize + 2] = '\0';
+  int mesmoTamanho = 1;
+  for (int i = 0; i < cont; i++)
+  {
+    if (strlen(seq[i]) != *maxSize)
+    {
+      mesmoTamanho = 0;
+      break;
+    }
   }
 
-  *maxSize += 2;
-}
+  if (mesmoTamanho)
+  {
+    // preencher dois gaps no final de cada sequencia
+    for (int i = 0; i < cont; i++)
+    {
+      seq[i][*maxSize] = '-';
+      seq[i][*maxSize + 1] = '-';
+      seq[i][*maxSize + 2] = '\0';
+    }
 
-void preencherGapDiferente(char seq[][103], int cont, int *maxSize){
-  for (int x = 0; x < cont; x++){
-    for (int y = 0; y < *maxSize; y++){
+    *maxSize += 2;
+  }
 
-      if (seq[x][y] == ' ' || seq[x][y] == '\0'){
-        seq[x][y] = '-';
-        seq[x][y + 1] = '\0';
+  else
+  {
+    for (int x = 0; x < cont; x++)
+    {
+      for (int y = 0; y < *maxSize; y++)
+      {
+        if (seq[x][y] == ' ' || seq[x][y] == '\0')
+        {
+          seq[x][y] = '-';
+          seq[x][y + 1] = '\0';
+        }
       }
-
     }
   }
 }
 
 // Essa função recebe uma sequencia, o tamanho max da sequencia e um índice.
 // coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
-void trocaPosicaoGapFinal(int indice, int *max, char *vetor)
+void trocaPosicaoGapFinal(int indice, int max, char *vetor)
 {
   int rodando = 1;
 
   do
   {
 
-    for (int i = *max - 1; i > indice; i--)
+    for (int i = max - 1; i > indice; i--)
     {
       vetor[i] = vetor[i - 1];
     }
 
     vetor[indice] = '-';
 
-    if (vetor[*max - 1] != '-')
+    if (vetor[max - 1] != '-')
     {
       rodando = 0;
     }
@@ -162,13 +178,10 @@ void trocaPosicaoGapFinal(int indice, int *max, char *vetor)
 // atual com a de baixo.
 // Se dois alinhamentos tiverem o mesmo numero de match's fica com o segundo
 // Se dois alinhamentos tiverem match's diferentes, mantém o que tiver mais.
-
 void alinhaSequencias(char seq[][103], int max, int nSeq){
 
     int nomatches = 0; // variável de verificação.
     char seqTemp[103];
-
-    printf("\nmax: %d\n", max);
 
     for(int x = 0; x < nSeq; x++){ //Percorre as sequencias (linhas)
     
@@ -280,19 +293,24 @@ int main() {
   int sequencias_count = 0;
   int max_string_size = 0;
 
+  char temp_sequencias_count[3];
+
   printf("\n\t******** Alinhamento multiplo de DNA  ********\n\n");
   printf("Por favor, digite o tamanho do conjunto de sequencias (min: 2, max: 10): ");
 
-  scanf("%d", &sequencias_count);
-  
-  while((sequencias_count < 2) || (sequencias_count > 10)){
-      system("clear");
-      printf("Tamanho invalido! Escolha outro tamanho (min: 2, max: 10):\n");
-      scanf("%d", &sequencias_count);
+  scanf("%s", temp_sequencias_count);
+
+  while ((strlen(temp_sequencias_count) > 1 && temp_sequencias_count == "10") || isdigit(atoi(&temp_sequencias_count[0])) != 0 || atoi(&temp_sequencias_count[0]) < 2 || atoi(&temp_sequencias_count[0]) > 10)
+  {
+    system("clear");
+    printf("Tamanho invalido! Escolha outro tamanho (min: 2, max: 10):\n");
+    scanf("%s", temp_sequencias_count);
   }
 
+  sequencias_count = atoi(&temp_sequencias_count[0]);
+
   char sequencias[sequencias_count][103];
-  
+
   pegandoSequencia(sequencias, sequencias_count, &max_string_size);
 
   system("clear");
@@ -303,26 +321,8 @@ int main() {
 
   printf("\nAlinhamento final:\n\n");
 
-  int mesmoTamanho = 1;
-  
-  for (int i = 0; i < sequencias_count; i++)
-  {
-    if (strlen(sequencias[i]) != max_string_size)
-    {
-      mesmoTamanho = 0;
-      break;
-    }
-  }
-
-  if (mesmoTamanho) preencheGapFinal(sequencias, sequencias_count, &max_string_size);
-
-  else preencherGapDiferente(sequencias, sequencias_count, &max_string_size); // em manutenção
-
-
-  imprimirSequencia(sequencias, sequencias_count);
-
+  preencheGapFinal(sequencias, sequencias_count, &max_string_size);
   alinhaSequencias(sequencias, max_string_size, sequencias_count); 
-
 
   imprimirSequencia(sequencias, sequencias_count);
 
