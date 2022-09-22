@@ -150,6 +150,7 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
 // coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
 void trocaPosicaoGapFinal(int indice, int max, char *vetor)
 {
+
   int rodando = 1;
 
   do
@@ -179,6 +180,18 @@ void limpaVetor(int *vetor, int tamanho){
     for(int i =0; i < tamanho; i++){
       vetor[i] = -1;
     }
+}
+
+//Verifica se um valor ja foi salvo no vetor.
+int verificaValor(int vetor[], int tamanho, int valor){
+
+    for(int i = 0; i < tamanho; i++){
+        if(vetor[i] == valor){
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 //Procura um índice vazio (== -1) no vetor e preenche com o valor informado.
@@ -221,8 +234,8 @@ int comparaSequencias(char seq[][103], char seqAtual[], int indice, int numSeq, 
         }
 
         // Se a posição não deu match, ela está eletiva a receber gaps.
-        //Salvamos a posição no vetor.
-        if(verificacao){
+        //Salvamos a posição no vetor caso essa posição já não tenha sido salva.
+        if(verificacao && verificaValor(dismatchs, max, y)){
           insereFinalVetor(dismatchs, max, y);
         }
     }
@@ -240,6 +253,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
     int numMatchs2 = 0;
     int dismatchs[max];
     char seqTemp[103];
+    char seqTemp2[103];
     
     for(int x = 0; x < nSeq; x++){ //Percorre as sequencias (linhas)
 
@@ -254,6 +268,8 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
       //Verifica quantos matchs a sequencia deu e quais os índices dos dismatchs:
       numMatchs = comparaSequencias(seq, seq[x], x, nSeq, max, dismatchs);
 
+       strcpy(seqTemp2,seq[x]);
+
       if(dismatchs[0] != -1){ 
 
         for(int i = 0; dismatchs[i] != -1; i++){   //testa todas as posições que não deram match.
@@ -263,18 +279,19 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
 
           // Dá o gap nessa posição, mas passando o vetor temporário.
           trocaPosicaoGapFinal(dismatchs[i], max, seqTemp);
-          // printf("seqtemP: %s\n",seqTemp);
 
           //Verifica quantos gaps eu consegui com esse alinhamento:
           numMatchs2 = comparaSequencias(seq, seqTemp, x, nSeq, max, dismatchs);
           
-          if(numMatchs2 > numMatchs){ //Se eu consegui mais gaps, mantém esse alinhamento.
-              strcpy(seq[x], seqTemp); 
+          if(numMatchs2 > numMatchs){ //Se eu consegui mais gaps, mantém esse alinhamento e atualiza numMatchs;
+              strcpy(seqTemp2, seqTemp); 
+              numMatchs = numMatchs2;
           }
-                
         }
       }
-        
+
+      strcpy(seq[x], seqTemp2); //Substitui pelo melhor alinhamento
+    
     }
 }
 
