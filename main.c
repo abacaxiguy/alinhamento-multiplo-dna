@@ -57,6 +57,8 @@ void calcular_score(char sequencias[10][103], int lin, int col)
 {
   int score = 0, alpha = 0, beta = 0, delta = 0;
 
+  int gaps = 0, sum_pos_gaps = 0;
+
   for (int i = 0; i < col; i++)
   {
     // coluna
@@ -82,8 +84,50 @@ void calcular_score(char sequencias[10][103], int lin, int col)
     }
   }
 
-  printf("\nSCORE:\n(α * %d) + (β * %d) + (δ * %d)", alpha, beta, delta);
+  printf("\nSCORE INICIAL:\n(α * %d) + (β * %d) + (δ * %d)", alpha, beta, delta);
   score > 0 ? printf(" = +%d\n", score) : printf(" = %d\n", score);
+
+  // Fórmula de peso para gaps no final
+  // (somatório posição gaps) * (quantidade gaps)
+
+  // Fórmula de peso para gaps juntos
+  // insipiração = xadrez =)
+  // quanto mais ilhas de gaps, menos gaps juntos temos
+  // (quantidade gaps * ilhas gaps)
+
+  int pGapsJuntos = 0;
+
+  for (int i = 0; i < lin; i++)
+  {
+    int gaps_linha = 0;
+    int ilhas_gaps = 0;
+    for (int j = 0; j < col; j++)
+    {
+      if (sequencias[i][j] == '-') {
+        gaps++;
+        sum_pos_gaps += j;
+        gaps_linha++;
+        while (sequencias[i][j+1] == '-') {
+          gaps_linha++;
+          gaps++;
+          j++;
+          sum_pos_gaps += j;
+        }
+        ilhas_gaps++;
+      }
+    }
+    pGapsJuntos += gaps_linha * (ilhas_gaps - 1);
+  }
+
+  int pGapsFinais = gaps + sum_pos_gaps;
+
+  printf("\nPesos:\n");
+  printf("pGapsJuntos = nº de gaps * (ilhas de gaps - 1): %d\n", pGapsJuntos);
+  printf("pGapsFinais = (∑ posição dos gaps) * (nº de gaps): %d\n", pGapsFinais);
+  score = score + pGapsFinais - pGapsJuntos;
+  printf("\nFÓRMULA = score + pGapsFinais - pGapsJuntos\n");
+  printf("\nSCORE FINAL: ");
+  score > 0 ? printf("+%d\n", score) : printf("%d\n", score);
 }
 
 // Percorre um vetor e verifica se este só contem letras.
@@ -116,7 +160,6 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
       break;
     }
   }
-
   if (mesmoTamanho)
   {
     // preencher dois gaps no final de cada sequencia
@@ -359,8 +402,6 @@ int main() {
   printf("\nAlinhamento final:\n\n");
 
   preencheGapFinal(sequencias, sequencias_count, &max_string_size);
-  imprimirSequencia(sequencias, sequencias_count);
-
   alinhaSequencias(sequencias, max_string_size, sequencias_count); 
 
   imprimirSequencia(sequencias, sequencias_count);
