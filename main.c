@@ -123,7 +123,7 @@ void calcular_score(char sequencias[10][103], int lin, int col)
 
   printf("\nPesos:\n");
   printf("pGapsJuntos = nº de gaps * (ilhas de gaps - 1): %d\n", pGapsJuntos);
-  printf("pGapsFinais = (∑ posição dos gaps) * (nº de gaps): %d\n", pGapsFinais);
+  printf("pGapsFinais = (∑ posição dos gaps) + (nº de gaps): %d\n", pGapsFinais);
   score = score + pGapsFinais - pGapsJuntos;
   printf("\nFÓRMULA = score + pGapsFinais - pGapsJuntos\n");
   printf("\nSCORE FINAL: ");
