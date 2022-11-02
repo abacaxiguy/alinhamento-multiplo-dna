@@ -189,153 +189,244 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
   }
 }
 
-// Essa função recebe uma sequencia, o tamanho max da sequencia e um índice.
-// coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
-void trocaPosicaoGapFinal(int indice, int max, char *vetor)
+//Essa função realiza o shift um numero determinado de vezes
+//linha = linha da matriz que será feito o shift
+// indice = indice o primeiro gap será aplicado
+// max = tamanho máximo das strings
+// num gaps = Quantos vezes será realizado o shift a partir do índice inicial.
+void trocaPosicaoGapFinal(char matriz[][103], int linha, int indice, int max, int num_gaps)
 {
+  for(int i = 0; i < num_gaps; i++){
 
-  int rodando = 1;
+    //passa todos os valores, a partir do ultimo índice uma casa pra frente:
+    for(int j = max - 1; j > indice; j--){
+      matriz[linha][j] = matriz[linha][j-1];
+    } 
 
-  do
-  {
+    //Aplica o gap no indice inicial informado
+    matriz[linha][indice] = '-';
 
-    for (int i = max - 1; i > indice; i--)
-    {
-      vetor[i] = vetor[i - 1];
+    //Atualiza o indice "inicial"
+    indice+=1;
+
+  }
+}
+
+//Preenche todos os índices de uma matriz 10x2 com -1;
+void limpaMatriz(int matriz[][2]){
+
+    
+  for(int x = 0; x< 10; x++){
+    for(int y = 0 ; y < 2; y++ ){
+        matriz[x][y] = -1;
     }
-
-    vetor[indice] = '-';
-
-    if (vetor[max - 1] != '-')
-    {
-      rodando = 0;
-    }
-
-    indice += 1;
-
-  } while (rodando);
+  }
 
 }
 
-//Preenche todos os índices do vetor com -1;
-void limpaVetor(int *vetor, int tamanho){
+//Procura um índice vazio (== -1) na matriz e coloca nessas posições os valores passados.
+void insereFinalMatriz(int matriz[][2], int valorX, int valorY){
 
-    for(int i =0; i < tamanho; i++){
-      vetor[i] = -1;
-    }
-}
-
-//Verifica se um valor ja foi salvo no vetor.
-int verificaValor(int vetor[], int tamanho, int valor){
-
-    for(int i = 0; i < tamanho; i++){
-        if(vetor[i] == valor){
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
-//Procura um índice vazio (== -1) no vetor e preenche com o valor informado.
-void insereFinalVetor(int *vetor, int tamanho, int valor){
-
-  for(int i = 0; i < tamanho; i++){
-      if(vetor[i] == -1){
-          vetor[i] = valor;
+    for(int x = 0; x < 10; x++){
+      if(matriz[x][0] == -1){
+          matriz[x][0] = valorX;
+          matriz[x][1] = valorY; 
           break;
-      } 
-  }
-}
-
-//Recebe uma sequencia e retorna quantos matchs ela conseguiu dar.
-//Salva os índices que não deram match.
-int comparaSequencias(char seq[][103], char seqAtual[], int indice, int numSeq, int max, int *dismatchs){
-
-  int numMatchs = 0;
-  int verificacao = 0;
-
-  if(dismatchs[0] == -1){ //Só atualiza dismatchs se for a sequencia inserida pelo usuário.
-      verificacao = 1;
-  }
-
-  for(int y = 0; y < max; y++){ //Percorre os caracteres da sequencia atual (colunas)
-
-    for(int j = 0; j < numSeq; j++){ //percorre as sequencias (linhas) pra comparar os caracteres (colunas)
-
-        if(j == indice){ //pulamos a sequencia atual. Não comparamos uma sequencia com ela mesma.
-          continue;
-        }
-
-        if(seqAtual[y] == '-'){ //pulamos p/ o prox caracter.
-          continue;
-        }
-
-        if(seqAtual[y] == seq[j][y]){ //Se der match com alguém finaliza. Não damos shift (por enquanto) se ja tiver dado um match
-          numMatchs +=1;
-          break;
-        }
-
-        // Se a posição não deu match, ela está eletiva a receber gaps.
-        //Salvamos a posição no vetor caso essa posição já não tenha sido salva.
-        if(verificacao && verificaValor(dismatchs, max, y)){
-          insereFinalVetor(dismatchs, max, y);
-        }
+      }
     }
-  }
-
-  return numMatchs;
 }
 
-// (Versão 2)
-// Percorre a matriz de sequencias linha a linha, e compara a linha do índice atual com a de baixo.
-// Se dois alinhamentos tiverem match's diferentes, mantém o que tiver mais match.
 void alinhaSequencias(char seq[][103], int max, int nSeq){
 
-    int numMatchs = 0;
-    int numMatchs2 = 0;
-    int dismatchs[max];
-    char seqTemp[103];
-    char seqTemp2[103];
-    
-    for(int x = 0; x < nSeq; x++){ //Percorre as sequencias (linhas)
+    //Guardam temporariamente a posição que o caracter deu match.
+    int xi, yi; 
+    int pula_caracter;
+    int quebra_loop;
+    int num_gaps = 0, num_gaps2 = 0;
 
-      if(seq[x][max-1] != '-'){   // verificar se há gaps p/ realizar o shift;
-          continue;
-      }
+    //Esse vetor guardará temporariamente as coordenadas que deram match na matriz
+    int posicoesMatch[10][2];
 
-      //Reseta os temporários:
-      limpaVetor(dismatchs, max); 
-      numMatchs = 0;
+    //Percorre cada uma das colunas, exceto a última.
+    for(int x = 0; x < (max - 1); x++){
 
-      //Verifica quantos matchs a sequencia deu e quais os índices dos dismatchs:
-      numMatchs = comparaSequencias(seq, seq[x], x, nSeq, max, dismatchs);
+      //Perocrre linha a linha da coluna
+      for(int y = 0; y < nSeq; y++){
 
-       strcpy(seqTemp2,seq[x]);
+        //Reseta os temporarios:
+        num_gaps = 0;
+        pula_caracter = 0;
+        limpaMatriz(posicoesMatch);
 
-      if(dismatchs[0] != -1){ 
-
-        for(int i = 0; dismatchs[i] != -1; i++){   //testa todas as posições que não deram match.
+        //Verifica se há gaps para realizar o shift
+        //Se não tem, vai pra prox linha.
+        if(seq[y][max-1] != '-') continue;
           
-          //Passa a sequencia atual p/ um vetor temporário.
-          strcpy(seqTemp, seq[x]); 
 
-          // Dá o gap nessa posição, mas passando o vetor temporário.
-          trocaPosicaoGapFinal(dismatchs[i], max, seqTemp);
+        //Verifica se o caracter deu match com alguém na mesma coluna que ele
+        //Se sim, não faz nada.
+        for(int i = 0; i < nSeq; i++){
+            
+          //Verifica se o caracter atual, é o mesmo que está sendo ussado pra comparar;
+          if(i == y) continue;
 
-          //Verifica quantos gaps eu consegui com esse alinhamento:
-          numMatchs2 = comparaSequencias(seq, seqTemp, x, nSeq, max, dismatchs);
+          if(seq[y][x] == '-') continue;
           
-          if(numMatchs2 > numMatchs){ //Se eu consegui mais gaps, mantém esse alinhamento e atualiza numMatchs;
-              strcpy(seqTemp2, seqTemp); 
-              numMatchs = numMatchs2;
+          if(seq[i][x] == seq[y][x]){
+              pula_caracter = 1;
+            break;
+          }
+          
+        }
+
+        // //Se o caracter atual deu match com alguém na coluna, vai pro prox caracter da mesma coluna.
+        if(pula_caracter) continue;
+
+        pula_caracter = 1;
+
+        //Se o caracter não deu match na coluna, procura na matriz se existe outro caracter igual para dar match
+        //Percorre as colunas:
+        for(int x0 = (x+1); x0 < max; x0++){
+          
+          //percorre as linhas:
+          for(int y0 = 0; y0 < nSeq; y0++){
+
+            quebra_loop = 0;
+            printf("%c ", seq[y0][x0]);
+
+            //Se for a mesma linha do caracter que estamos verificando, pula pra prox linha:
+            if(y0 == y) continue;
+
+            //Verifica se os caracteres são iguais:
+            if(seq[y0][x0] == seq[y][x]){
+              printf("\n%c é igual %c\n", seq[y0][x0], seq[y][x] );
+
+              //Se forem, guarda as coordenadas desse possível match;
+              xi = x0;
+              yi = y0;
+
+
+              //Verifica se os caracteres subsequentes estão dando match com algum caracter
+              //Pois, se algum caracter der match na mesma linha do possível match, não aplicaremos gaps
+              //Se algum caracter der match, porém for em uma linha diferente do nosso possível match, da gap nas duas linhas p/manter o alinhamento.
+              //Percorre a coluna:
+              for(int x1 = (x+1); x1< max; x1++){
+                
+                //percorre a linha:
+                for(int y1 = 0; y1<nSeq; y1++){
+
+                  if(y1 == y) continue;
+
+                  //Se tiver gap na posição, pula para a próxima
+                  if( seq[y][x1] == '-' || seq[y1][x1] == '-' ) continue;
+
+                  //Se encontrou algum algum caracter na mesma linha que deu match:
+                  if(seq[y][x1] == seq[y1][x1] && seq[y][x1] != '-' && seq[y1][x1] ){
+                    printf("OS PROXIMOS CARACTERES DÃO MATCH");
+
+                    //Se esse match foi na mesma posição do possível match, descarta essa posição.
+                    if(y1 == yi ){
+                      printf("O MATCH DO PROX É NA PROX LINHA\n");
+                      quebra_loop = 1;
+                      pula_caracter = 0;
+                      break;
+                    }
+
+                    //Se não for na mesma linha, guarda essa posição para saber quem vai andar junto depois.
+                    insereFinalMatriz(posicoesMatch, x1, y1);
+                  } 
+
+                  pula_caracter = 1;
+
+                }
+
+                  if(quebra_loop) break;
+              }
+
+            }
+
+          }
+
+          printf("\n");
+
+        }
+
+        //Caso não encontre nenhum caracter que atenda das condições estabelecidas acima
+        //vai pro prox caracter
+        if(!pula_caracter) continue;
+
+        //Se encontrou caracter pra dar match:
+        //Verifica se há gaps suficientes p/ realizar o shift
+        // //Contabiliza quantos gaps tem disponíveis:
+        for(int i = 0; i < max; i++){ 
+          if(seq[y][i] == '-') num_gaps++;
+
+          if(seq[y][i] != '-' && num_gaps > 0) num_gaps--;
+        }
+
+        printf("num gaps: %d\n", num_gaps);
+
+        printf("xi: %d\n", xi);
+
+        printf("x: %d\n", x);
+
+        int gapsNecessarios = xi - x;
+
+        printf("gps necessários: %d\n", gapsNecessarios);
+
+        //Verificar se o numero de gaps é suficiente p/ dar o match:
+        if(gapsNecessarios <= num_gaps){
+          printf("TEM GAPS SUFICIENTES\n");
+
+          pula_caracter = 0;
+
+          //Verifica se as posições subsequentes que deram match possuem a quantidade de gaps necessários:
+          //Pois, se não possuirem, não será realizado o shift em nenhuma das linhas.
+          for(int j = 0 ; j < 10; j++){
+            
+            printf("%d\n", posicoesMatch[0][j]);
+            if(posicoesMatch[j][0] == -1){
+              printf("BREAK\n");
+              break;
+            }
+          
+
+              for(int i = 0; i<max; i++){
+
+                if(seq[posicoesMatch[j][1]][i] == '-') num_gaps2++;
+
+                if(seq[y][i] != '-' && num_gaps2 > 0) num_gaps2--;
+                
+              }
+
+              printf("numgaps2: %d\n", num_gaps2);
+              
+              //Se não tiverem gaps suficientes no final, não realiza nenhum shift
+              if(gapsNecessarios > num_gaps2){
+                  pula_caracter = 1;
+                  break;
+              }
+
+          }
+
+          //Se está tudo correto, realiza o shift, em todas as posições necessárias:
+          if(!pula_caracter){
+              
+            trocaPosicaoGapFinal(seq, y, x, max, num_gaps);
+
+            for(int j = 0; j < 10; j++){
+              if(posicoesMatch[j][0] == -1){
+                break;
+              }
+
+              trocaPosicaoGapFinal(seq, posicoesMatch[j][1], posicoesMatch[j][0], max, num_gaps);
+
+            }
+
           }
         }
       }
-
-      strcpy(seq[x], seqTemp2); //Substitui pelo melhor alinhamento
-    
-    }
+    } 
 }
 
 // Pega a sequencia enviada pelo usuario e verifica se é valida
@@ -396,15 +487,23 @@ int main() {
   system("clear");
   printf("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n", sequencias_count, max_string_size);
 
-  printf("\nSequencia inicial: \n\n");
+ printf("\nSequencia inicial: \n\n");
   imprimirSequencia(sequencias, sequencias_count);
 
-  printf("\nAlinhamento final:\n\n");
+  printf("\nAlinhamento com gaps no final:\n\n");
 
   preencheGapFinal(sequencias, sequencias_count, &max_string_size);
+  imprimirSequencia(sequencias, sequencias_count);
+
+  printf("\n");
+
+  printf("\nMelhor alinhamento:\n\n");
+
   alinhaSequencias(sequencias, max_string_size, sequencias_count); 
 
   imprimirSequencia(sequencias, sequencias_count);
+
+  printf("\n");
 
   calcular_score(sequencias, sequencias_count, max_string_size);
 
