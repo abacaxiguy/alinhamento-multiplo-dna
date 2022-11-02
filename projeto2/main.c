@@ -29,6 +29,9 @@ Soutput, cuja remoção dos gaps de rj reproduza a seqüência sj dada.
 #define BETA 0   // A + T
 #define DELTA -1 // A + - // - + -
 
+#define DIF 0 // AB / ABA = DIFERENTES TAMANHOS
+#define IGUAL 1 // AB / AB = IGUAIS TAMANHOS
+
 // Projeto 2
 // Alinhamento multiplo de sequencias usando programacao dinamica e estrutura de árvore n-ária
 
@@ -126,6 +129,132 @@ void pegandoSequencia(char sequencias[][103], int sequencias_count, int *max_str
     }
 }
 
+// Calcula o score da sequencia atual
+void calcular_score(char sequencias[10][103], int lin, int col)
+{
+    int score = 0, alpha = 0, beta = 0, delta = 0;
+
+    int gaps = 0, sum_pos_gaps = 0;
+
+    for (int i = 0; i < col; i++)
+    {
+        // coluna
+        for (int j = 0; j < lin; j++)
+        {
+            // linha
+            for (int k = j + 1; k < lin; k++)
+            {
+                // pares ordenados
+                if (sequencias[j][i] == '-' || sequencias[k][i] == '-')
+                {
+                    score += DELTA;
+                    delta += 1;
+                }
+                else if (sequencias[j][i] == sequencias[k][i])
+                {
+                    score += ALPHA;
+                    alpha += 1;
+                }
+                else
+                {
+                    score += BETA;
+                    beta += 1;
+                }
+            }
+        }
+    }
+
+    printf("\nSCORE INICIAL:\n(α * %d) + (β * %d) + (δ * %d)", alpha, beta, delta);
+    score > 0 ? printf(" = +%d\n", score) : printf(" = %d\n", score);
+
+    // Fórmula de peso para gaps no final
+    // (somatório posição gaps) * (quantidade gaps)
+
+    // Fórmula de peso para gaps juntos
+    // insipiração = xadrez =)
+    // quanto mais ilhas de gaps, menos gaps juntos temos
+    // (quantidade gaps * ilhas gaps)
+
+    int pGapsJuntos = 0;
+
+    for (int i = 0; i < lin; i++)
+    {
+        int gaps_linha = 0;
+        int ilhas_gaps = 0;
+        for (int j = 0; j < col; j++)
+        {
+            if (sequencias[i][j] == '-')
+            {
+                gaps++;
+                sum_pos_gaps += j;
+                gaps_linha++;
+                while (sequencias[i][j + 1] == '-')
+                {
+                    gaps_linha++;
+                    gaps++;
+                    j++;
+                    sum_pos_gaps += j;
+                }
+                ilhas_gaps++;
+            }
+        }
+        pGapsJuntos += gaps_linha * (ilhas_gaps - 1);
+    }
+
+    int pGapsFinais = gaps + sum_pos_gaps;
+
+    printf("\nPesos:\n");
+    printf("pGapsJuntos = nº de gaps * (ilhas de gaps - 1): %d\n", pGapsJuntos);
+    printf("pGapsFinais = (∑ posição dos gaps) + (nº de gaps): %d\n", pGapsFinais);
+    score = score + pGapsFinais - pGapsJuntos;
+    printf("\nFÓRMULA = score + pGapsFinais - pGapsJuntos\n");
+    printf("\nSCORE FINAL: ");
+    score > 0 ? printf("+%d\n", score) : printf("%d\n", score);
+}
+
+// Preenche a matriz com gaps no final, se for do mesmo tamanho coloca um gap a mais
+int preencheGapFinal(char seq[][103], int cont, int *maxSize)
+{
+    // checar se todas as sequencias possuem o mesmo tamanho
+    int tamanho = IGUAL;
+    for (int i = 0; i < cont; i++)
+    {
+        if (strlen(seq[i]) != *maxSize)
+        {
+            tamanho = DIF;
+            break;
+        }
+    }
+    if (tamanho == IGUAL)
+    {
+        // adicionar um gap a mais
+        for (int i = 0; i < cont; i++)
+        {
+            seq[i][*maxSize] = '-';
+            seq[i][*maxSize + 1] = '\0';
+        }
+
+        *maxSize += 1;
+    }
+
+    else
+    {
+        for (int x = 0; x < cont; x++)
+        {
+            for (int y = 0; y < *maxSize; y++)
+            {
+                if (seq[x][y] == ' ' || seq[x][y] == '\0')
+                {
+                    seq[x][y] = '-';
+                    seq[x][y + 1] = '\0';
+                }
+            }
+        }
+    }
+
+    return tamanho;
+}
+
 int main(){
     int sequencias_count = 0;
     int max_string_size = 0;
@@ -153,11 +282,35 @@ int main(){
     system("clear");
     printf("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n", sequencias_count, max_string_size);
 
+    printf("\nSequencia inicial: \n\n");
+    imprimirSequencia(sequencias, sequencias_count);
+
+    printf("\nAlinhamento com gaps no final:\n\n");
+
+    int tamanho = preencheGapFinal(sequencias, sequencias_count, &max_string_size);
+    imprimirSequencia(sequencias, sequencias_count);
+
+    printf("\n");
+
     // Alinhar as sequencias com arvore n-aria
 
     // A arvore n-aria deve ser construida a partir das possibilidades de alinhamento das sequencias
     // A raiz da arvore deve ser a primeira coluna das sequencias
-    // Cada filho da raiz deve ser uma das possibilidades de alinhamento com gap ou com a segunda coluna das sequencias
+    // Cada filho da raiz deve ser uma das possibilidades de alinhamento da primeira coluna
+
+    // exemplo:
+    // sequencias: ABCD, CA, AA
+    // raiz1: ACA
+    // possibilidades:
+    // ACA
+    // A-A
+    // AC-
+    // A--
+
+    // calcular o score de cada possibilidade
+    // escolher a possibilidade com maior score
+    // adicionar a possibilidade escolhida na arvore
+    
 
     return 0;
 }
