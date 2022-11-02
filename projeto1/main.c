@@ -166,11 +166,10 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
     for (int i = 0; i < cont; i++)
     {
       seq[i][*maxSize] = '-';
-      seq[i][*maxSize + 1] = '-';
-      seq[i][*maxSize + 2] = '\0';
+      seq[i][*maxSize + 1] = '\0';
     }
 
-    *maxSize += 2;
+    *maxSize += 1;
   }
 
   else
@@ -487,7 +486,7 @@ int main() {
   system("clear");
   printf("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n", sequencias_count, max_string_size);
 
- printf("\nSequencia inicial: \n\n");
+  printf("\nSequencia inicial: \n\n");
   imprimirSequencia(sequencias, sequencias_count);
 
   printf("\nAlinhamento com gaps no final:\n\n");
