@@ -35,49 +35,104 @@ Soutput, cuja remoção dos gaps de rj reproduza a seqüência sj dada.
 // Projeto 2
 // Alinhamento multiplo de sequencias usando programacao dinamica e estrutura de árvore n-ária
 
-// Estrutura de dados para representar uma arvore n-aria
-typedef struct arvore {
-    struct arvore *pai;
-    struct arvore *filho;
-    struct arvore *irmao;
+// Estrutura de dados para representar uma arvore n-aria com lista dinamica de filhos
+// A dynamic general tree representation with fixed-size arrays for the child pointers.
+typedef struct no{
     char *sequencia;
-} Arvore;
+    struct no *primogenito; //Primeiro filho 
+    struct no *irmao; //Irmão ao lado
 
-// O alinhamento deve ser feito com 10 sequencias de tamanho 100
+}No;
 
 // Funcao para criar uma arvore n-aria
-Arvore *criarArvore(char *sequencia) {
-    Arvore *arvore = (Arvore *)malloc(sizeof(Arvore));
-    arvore->pai = NULL;
-    arvore->filho = NULL;
-    arvore->irmao = NULL;
-    arvore->sequencia = sequencia;
-    return arvore;
+No *criaNovoNo(char *sequencia)
+{
+    No* novo = (No*)malloc(sizeof(No)); //Alloca memória para o novo nó
+
+    novo->primogenito = NULL; //o NÓ ainda não possui filhos
+    novo->irmao = NULL; //O NÓ ainda não possui irmão
+    novo->sequencia = sequencia;
+    return(novo);
 }
 
-// Funcao para inserir um filho em uma arvore n-aria
-void inserirFilho(Arvore *arvore, char *sequencia) {
-    Arvore *filho = criarArvore(sequencia);
-    filho->pai = arvore;
-    filho->irmao = arvore->filho;
-    arvore->filho = filho;
+No *inicializa(char *sequencia)
+{
+    return (criaNovoNo(sequencia));
 }
 
-// Funcao para inserir um irmao em uma arvore n-aria
-void inserirIrmao(Arvore *arvore, char *sequencia) {
-    Arvore *irmao = criarArvore(sequencia);
-    irmao->pai = arvore->pai;
-    irmao->irmao = arvore->irmao;
-    arvore->irmao = irmao;
-}
-
-// Funcao para imprimir uma arvore n-aria
-void imprimirArvore(Arvore *arvore) {
-    if (arvore != NULL) {
-        printf("%s", arvore->sequencia);
-        imprimirArvore(arvore->filho);
-        imprimirArvore(arvore->irmao);
+No *buscaValor(char *seq, No *raiz)
+{
+    if (raiz == NULL)
+    {
+        return NULL; // Não há elementos na árvore.
     }
+
+    if (raiz->sequencia == seq)
+    { // Verifica se o valor está na raiz
+        return raiz;
+    }
+
+    No *p = raiz->primogenito; // se não encontra no pai, procura no filho.
+
+    while (p)
+    {                                    // e p/ cada filho buscamos na subárvore em que ele é a raiz
+        No *resp = buscaValor(seq, p); // chamada recursiva
+        if (resp)
+        { // Verifica se encontrou um valor
+            return resp;
+        }
+        p = p->irmao;
+    }
+
+    return (NULL);
+}
+
+// A função inserir deve receber o primeiro nó, o valor a ser colocado na árvore e o valor do elemento pai(pai do novo nó que será criado)
+int inserir(No *raiz, char *sequencia, char *sequenciaPai)
+{
+    No *pai = buscaValor(sequenciaPai, raiz); // Procura o pai informado na árvore
+    if (!pai)
+    {
+        return 0;
+    }
+    No *filho = criaNovoNo(sequencia); // Cria o nó do filho
+    No *p = pai->primogenito;      // verifica se o pai já tem um filho
+
+    if (!p)
+    { // Se não tiver filho, o novo nó será o primogênito
+        pai->primogenito = filho;
+    }
+    else
+    { // Se ja tiver um filho
+
+        while (p->irmao)
+        {                 // Passa pelos filhos até encontrar um que tenha irmão = NULL;
+            p = p->irmao; // Enquanto isso, auxiliar vai passando de irmão em irmão até encontrar o que tenha valor NULL.
+        }
+
+        // Após encontrado:
+        p->irmao = filho;
+        return 1;
+    }
+}
+
+void imprimeArvore(No *raiz)
+{
+
+    if (raiz == NULL)
+    { // Verifica se há elementos na raiz
+        return;
+    }
+
+    printf("%s(", raiz->sequencia); // Imprime o valor do nó atual
+    No *p = raiz->primogenito;  // guarda o primeiro filho num vetor temporário
+
+    while (p)
+    { // Imprime de forma recursiva, um nós filho(sub-arvore) e depois os filhos desse nó, até imprimir toda a árvore.
+        imprimeArvore(p);
+        p = p->irmao;
+    }
+    printf(")");
 }
 
 // Percorre um vetor e verifica se este só contem letras.
@@ -98,7 +153,7 @@ int verificaCharValidos(char seq[])
 }
 
 // Pega a sequencia enviada pelo usuario e verifica se é valida
-void pegandoSequencia(char sequencias[][103], int sequencias_count, int *max_string_size)
+void pegandoSequencia(char sequencias[][103], int sequencias_count, int *max_string_size, int *index_da_maior_seq)
 {
     system("clear");
     for (int i = 0; i < sequencias_count; i++)
@@ -124,8 +179,10 @@ void pegandoSequencia(char sequencias[][103], int sequencias_count, int *max_str
             sequencia_size = strlen(sequencias[i]);
         }
 
-        if (sequencia_size > *max_string_size)
+        if (sequencia_size > *max_string_size){ 
             *max_string_size = sequencia_size;
+            *index_da_maior_seq = i;
+        }
     }
 }
 
@@ -255,6 +312,56 @@ int preencheGapFinal(char seq[][103], int cont, int *maxSize)
     return tamanho;
 }
 
+// Imprime a sequencia atual
+void imprimirSequencia(char sequencia[][103], int tamanhoSequencia)
+{
+    for (int i = 0; i < tamanhoSequencia; i++)
+    {
+        printf("%s\n", sequencia[i]);
+    }
+}
+
+void criaPossibilidades(No *raiz, char *pai, int tam_coluna, int eh_igual, int index_da_maior_seq){
+    int novo_tam_coluna = !eh_igual ? tam_coluna + 1 : tam_coluna + 2;
+
+    for (int i = 0; i < novo_tam_coluna; i++)
+    {
+
+        char temp_seq[novo_tam_coluna];
+
+        if (!eh_igual){
+            for (int j = 0; j < tam_coluna; j++)
+            {
+
+                if (j == i && i != index_da_maior_seq) {
+                    temp_seq[j] = '-';
+                }
+                else if (i >= tam_coluna && j != index_da_maior_seq){
+                    temp_seq[j] = '-';
+                }
+                else {
+                    temp_seq[j] = raiz->sequencia[j];
+                }
+            }
+        } else {
+            for (int j = 0; j < tam_coluna; j++)
+            {
+                if (j == i)
+                {
+                    temp_seq[j] = '-';
+                }
+                else
+                {
+                    temp_seq[j] = raiz->sequencia[j];
+                }
+            }
+        }
+        
+        printf("Eu to inserindo %s\n", temp_seq);
+        inserir(raiz, temp_seq, pai);
+    }
+}
+
 int main(){
     int sequencias_count = 0;
     int max_string_size = 0;
@@ -276,8 +383,9 @@ int main(){
     sequencias_count = atoi(&temp_sequencias_count[0]);
 
     char sequencias[sequencias_count][103];
+    int index_da_maior_seq = 0;
 
-    pegandoSequencia(sequencias, sequencias_count, &max_string_size);
+    pegandoSequencia(sequencias, sequencias_count, &max_string_size, &index_da_maior_seq);
 
     system("clear");
     printf("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n", sequencias_count, max_string_size);
@@ -301,16 +409,26 @@ int main(){
     // exemplo:
     // sequencias: ABCD, CA, AA
     // raiz1: ACA
-    // possibilidades:
-    // ACA
-    // A-A
-    // AC-
-    // A--
 
-    // calcular o score de cada possibilidade
-    // escolher a possibilidade com maior score
-    // adicionar a possibilidade escolhida na arvore
-    
+
+    // criar uma matriz com as colunas das sequencias
+    char sequencias_verticais[max_string_size][sequencias_count];
+
+    for (int i = 0; i < max_string_size; i++)
+    {
+        for (int j = 0; j < sequencias_count; j++)
+        {
+            sequencias_verticais[i][j] = sequencias[j][i];
+        }
+        sequencias_verticais[i][sequencias_count] = '\0';
+
+        // criar uma arvore para cada coluna
+        No *arvore = inicializa(sequencias_verticais[i]);
+        criaPossibilidades(arvore, sequencias_verticais[i], sequencias_count, tamanho, index_da_maior_seq);
+        imprimeArvore(arvore);
+    }
+
+
 
     return 0;
 }
