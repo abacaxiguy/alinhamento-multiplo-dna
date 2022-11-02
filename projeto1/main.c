@@ -261,6 +261,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
         //Se não tem, vai pra prox linha.
         if(seq[y][max-1] != '-') continue;
           
+        if(seq[y][x] == '-') continue;
 
         //Verifica se o caracter deu match com alguém na mesma coluna que ele
         //Se sim, não faz nada.
