@@ -292,14 +292,14 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
           for(int y0 = 0; y0 < nSeq; y0++){
 
             quebra_loop = 0;
-            printf("%c ", seq[y0][x0]);
+            // printf("%c ", seq[y0][x0]);
 
             //Se for a mesma linha do caracter que estamos verificando, pula pra prox linha:
             if(y0 == y) continue;
 
             //Verifica se os caracteres são iguais:
             if(seq[y0][x0] == seq[y][x]){
-              printf("\n%c é igual %c\n", seq[y0][x0], seq[y][x] );
+              // printf("\n%c é igual %c\n", seq[y0][x0], seq[y][x] );
 
               //Se forem, guarda as coordenadas desse possível match;
               xi = x0;
@@ -322,11 +322,11 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
 
                   //Se encontrou algum algum caracter na mesma linha que deu match:
                   if(seq[y][x1] == seq[y1][x1] && seq[y][x1] != '-' && seq[y1][x1] ){
-                    printf("OS PROXIMOS CARACTERES DÃO MATCH");
+                    // printf("OS PROXIMOS CARACTERES DÃO MATCH");
 
                     //Se esse match foi na mesma posição do possível match, descarta essa posição.
                     if(y1 == yi ){
-                      printf("O MATCH DO PROX É NA PROX LINHA\n");
+                      // printf("O MATCH DO PROX É NA PROX LINHA\n");
                       quebra_loop = 1;
                       pula_caracter = 0;
                       break;
@@ -364,19 +364,19 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
           if(seq[y][i] != '-' && num_gaps > 0) num_gaps--;
         }
 
-        printf("num gaps: %d\n", num_gaps);
+        // printf("num gaps: %d\n", num_gaps);
 
-        printf("xi: %d\n", xi);
+        // printf("xi: %d\n", xi);
 
-        printf("x: %d\n", x);
+        // printf("x: %d\n", x);
 
         int gapsNecessarios = xi - x;
 
-        printf("gps necessários: %d\n", gapsNecessarios);
+        // printf("gps necessários: %d\n", gapsNecessarios);
 
         //Verificar se o numero de gaps é suficiente p/ dar o match:
         if(gapsNecessarios <= num_gaps){
-          printf("TEM GAPS SUFICIENTES\n");
+          // printf("TEM GAPS SUFICIENTES\n");
 
           pula_caracter = 0;
 
@@ -384,9 +384,9 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
           //Pois, se não possuirem, não será realizado o shift em nenhuma das linhas.
           for(int j = 0 ; j < 10; j++){
             
-            printf("%d\n", posicoesMatch[0][j]);
+            // printf("%d\n", posicoesMatch[0][j]);
             if(posicoesMatch[j][0] == -1){
-              printf("BREAK\n");
+              // printf("BREAK\n");
               break;
             }
           
@@ -399,7 +399,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
                 
               }
 
-              printf("numgaps2: %d\n", num_gaps2);
+              // printf("numgaps2: %d\n", num_gaps2);
               
               //Se não tiverem gaps suficientes no final, não realiza nenhum shift
               if(gapsNecessarios > num_gaps2){
