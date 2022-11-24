@@ -54,7 +54,7 @@ int inserir(No* pai, char seq[]){
 //Preenche todos os espaços de um vetor com um valor padrão
 void resetaVetor(char vet[]){
     for(int i = 0; i<10; i++){
-        vet[i] = '1';
+        vet[i] = ' ';
     }
 }
 
@@ -132,6 +132,8 @@ void trocaPosicaoGapFinal(char matriz[][103], int linha, int indice, int max){
 
 void alinhaSequencias(char seq[][103], int max, int nSeq){
 
+    printf("Numero de sequencias:%d\n", nSeq);
+
     char vetTemp[10]; //Guarda a coluna atual
 
     //Copia a primeira coluna pro vetor temporário
@@ -147,40 +149,60 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
     //percorre as colunas
     for(int y = 0; y< max; y++){
         
+        printf("y: %d\n", y);
+
         //Copia a coluna atual pra o vetor temporario
         //Se for a primeira coluna, vetTemp ja possui essa cópia
         if(y != 0){
             copiaColuna(seq, vetTemp, max, nSeq, y);
         }
 
-            printf("%s\n", vetTemp);
-
-
         //Criação das variações:=================================================
 
         //A versão inserida pelo usuario também é uma variação válida
         inserir(paiAtual, vetTemp);
 
-        //1 gap por linha:
-        for(int i = 0; i < nSeq; i++){   
+        //Define o numero de gaps:(1 - 10)-----------------------------------------------------------
+        for(int n = 1; n <= nSeq; n++){
 
-            //Reseta o vetor temporario
-            copiaColuna(seq, vetTemp, max, nSeq, y);
-            
-            //Não tem gap no final da linha
+          printf("n: %d\n", n);
+
+          //Avança entre os indices da coluna pra aplicar as variações de gap:
+          for(int i = 0; i< nSeq; i++){
+
+            //Não tem gap no final da linha, vai pro próximo caracter
             if(seq[i][max-1] != '-'){
                 continue;
             }
-            
-            //Aplica o gap na posição
-            vetTemp[i] = '-';
-            
-            // Guarda a varição como filho na árvore
+
+            //Reseta o vetor temporario
+            copiaColuna(seq, vetTemp, max, nSeq, y);
+
+            //variação 1: n Gaps em sequencia:-------------------------------------
+            for(int j = i; j < (i+n); j++){
+        
+                //Verifica se há caracteres suficientes pra aplicar o numero de gaps desejado
+                if(((i+n)-1) >= nSeq){
+                  break;
+                }
+
+                //Verifica se há gaps no final pra aplicar nessa sequencia
+                if(seq[j][max-1] != '-'){
+                  continue;
+                }
+
+                vetTemp[j] = '-';
+            }
+
             inserir(paiAtual, vetTemp);
+            printf("seq com n=%d gaps: %s\n", n, vetTemp);
+            
+            
+          }
+            
         }
 
         //Calcula o score e pega o nó de maior score:===================================
-
         paiAtual = devolveMaiorScore(paiAtual, nSeq);
         
         //Aplica os gaps do maior score na matriz:=============================================
@@ -193,8 +215,6 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
         }
 
     }
-
-
 }
 
 
