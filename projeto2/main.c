@@ -197,7 +197,33 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
             inserir(paiAtual, vetTemp);
             printf("seq com n=%d gaps: %s\n", n, vetTemp);
             
-            
+             //Reseta o vetor temporario
+            copiaColuna(seq, vetTemp, max, nSeq, y);
+
+            //Variação 2: n Gaps alternados:-----------------------------------------
+            //(pula uma posição pra aplicar o gap)
+            for(int j = i; j <= (i+n)+1; j+=2){
+
+                //gaps alternados só funciona a partir de 2 gaps
+                if(n == 1){
+                  break;
+                }
+
+                //Verifica se há caracteres suficientes pra aplicar o numero de gaps desejado
+                if((((n-1)*2)+i) >= nSeq){
+                  break;
+                }
+
+                //Verifica se há gaps no final pra aplicar nessa sequencia
+                if(seq[j][max-1] != '-'){
+                  continue;
+                }
+
+                vetTemp[j] = '-';
+            }
+
+            inserir(paiAtual, vetTemp);
+            printf("seq com n=%d gaps: %s\n", n, vetTemp);
           }
             
         }
