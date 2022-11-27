@@ -132,7 +132,7 @@ void trocaPosicaoGapFinal(char matriz[][103], int linha, int indice, int max){
 
 void alinhaSequencias(char seq[][103], int max, int nSeq){
 
-    printf("Numero de sequencias:%d\n", nSeq);
+    // printf("Numero de sequencias:%d\n", nSeq);
 
     char vetTemp[10]; //Guarda a coluna atual
 
@@ -149,7 +149,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
     //percorre as colunas
     for(int y = 0; y< max; y++){
         
-        printf("y: %d\n", y);
+        // printf("y: %d\n", y);
 
         //Copia a coluna atual pra o vetor temporario
         //Se for a primeira coluna, vetTemp ja possui essa cópia
@@ -165,7 +165,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
         //Define o numero de gaps:(1 - 10)-----------------------------------------------------------
         for(int n = 1; n <= nSeq; n++){
 
-          printf("n: %d\n", n);
+          // printf("n: %d\n", n);
 
           //Avança entre os indices da coluna pra aplicar as variações de gap:
           for(int i = 0; i< nSeq; i++){
@@ -195,7 +195,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
             }
 
             inserir(paiAtual, vetTemp);
-            printf("seq com n=%d gaps: %s\n", n, vetTemp);
+            // printf("seq com n=%d gaps: %s\n", n, vetTemp);
             
              //Reseta o vetor temporario
             copiaColuna(seq, vetTemp, max, nSeq, y);
@@ -223,7 +223,7 @@ void alinhaSequencias(char seq[][103], int max, int nSeq){
             }
 
             inserir(paiAtual, vetTemp);
-            printf("seq com n=%d gaps: %s\n", n, vetTemp);
+            // printf("seq com n=%d gaps: %s\n", n, vetTemp);
           }
             
         }
@@ -337,8 +337,6 @@ void imprimirSequencia(char sequencia[][103], int tamanhoSequencia)
 
 int main(){
 
-    // No* raiz = inicializa(8); //Cria o primeiro nó da árvore.
-
     int sequencias_count = 0;
     int max_string_size = 0;
 
@@ -374,6 +372,8 @@ int main(){
     imprimirSequencia(sequencias, sequencias_count);
 
     alinhaSequencias(sequencias, max_string_size, sequencias_count);
+
+    printf("\nMelhor alinhamento:\n\n");
 
     imprimirSequencia(sequencias, sequencias_count);
 
