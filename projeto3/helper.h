@@ -458,3 +458,53 @@ void imprimirSequencia(char sequencia[][103], int tamanhoSequencia)
         printf("%s\n", sequencia[i]);
     }
 }
+
+// int main()
+// {
+
+//     int sequencias_count = 0;
+//     int max_string_size = 0;
+
+//     char temp_sequencias_count[3];
+
+//     printf("\n\t******** Alinhamento multiplo de DNA  ********\n\n");
+//     printf("Por favor, digite o tamanho do conjunto de sequencias (min: 2, max: 10): ");
+
+//     scanf("%s", temp_sequencias_count);
+
+//     while ((strlen(temp_sequencias_count) > 1 && temp_sequencias_count == "10") || isdigit(atoi(&temp_sequencias_count[0])) != 0 || atoi(&temp_sequencias_count[0]) < 2 || atoi(&temp_sequencias_count[0]) > 10)
+//     {
+//         system("clear");
+//         printf("Tamanho invalido! Escolha outro tamanho (min: 2, max: 10):\n");
+//         scanf("%s", temp_sequencias_count);
+//     }
+
+//     sequencias_count = atoi(&temp_sequencias_count[0]);
+
+//     char sequencias[sequencias_count][103];
+
+//     pegandoSequencia(sequencias, sequencias_count, &max_string_size);
+
+//     system("clear");
+//     printf("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n", sequencias_count, max_string_size);
+
+//     printf("\nSequencia inicial: \n\n");
+//     imprimirSequencia(sequencias, sequencias_count);
+
+//     printf("\nAlinhamento com gaps no final:\n\n");
+
+//     preencheGapFinal(sequencias, sequencias_count, &max_string_size);
+//     imprimirSequencia(sequencias, sequencias_count);
+
+//     alinhaSequencias(sequencias, max_string_size, sequencias_count);
+
+//     printf("\nMelhor alinhamento:\n\n");
+
+//     imprimirSequencia(sequencias, sequencias_count);
+
+//     printf("\n");
+
+//     calcular_score(sequencias, sequencias_count, max_string_size);
+
+//     return 0;
+// }
