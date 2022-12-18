@@ -208,7 +208,7 @@ alinha_sequencias(GtkWidget *widget,
 
     int info[6];
     int *score;
-    score = calcular_score(sequencias, sequencias_ativas, max_string_size, &info);
+    score = calcular_score(sequencias, sequencias_ativas, max_string_size, info);
     char score_signed[10];
 
     if (score[0] >= 0) {
@@ -218,7 +218,7 @@ alinha_sequencias(GtkWidget *widget,
     }
 
     char score_string[164];
-    sprintf(score_string, "SCORE:\n((α * %d) + (β * %d) + (δ * %d)) + %d - %d = %s", score[1], score[2], score[3], score[4], score[5], score_signed);
+    sprintf(score_string, "SCORE:\n(α * %d) + (β * %d) + (δ * %d) + %d - %d = %s", score[1], score[2], score[3], score[4], score[5], score_signed);
 
     GtkWidget *label = gtk_label_new(score_string);
     gtk_widget_set_name(label, "score");
@@ -227,7 +227,7 @@ alinha_sequencias(GtkWidget *widget,
 
     // create <small>
     GtkWidget *small = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(small), "Para mais informações, clique no botão de ajuda!");
+    gtk_label_set_markup(GTK_LABEL(small), "Para mais informações, clique no botão acima!");
     gtk_widget_set_name(small, "small");
     gtk_grid_attach(GTK_GRID(data), small, 0, 1, 1, 1);
     gtk_widget_set_halign(small, GTK_ALIGN_START);
@@ -451,7 +451,7 @@ activate(GtkApplication *app,
 
     GtkWidget *info_button = gtk_button_new_from_icon_name("dialog-information", GTK_ICON_SIZE_BUTTON);
     gtk_header_bar_pack_end(GTK_HEADER_BAR(headerbar), info_button);
-    g_signal_connect(info_button, "clicked", G_CALLBACK(info_button_clicked), NULL);
+    g_signal_connect(info_button, "clicked", G_CALLBACK(info_button_clicked), "1");
 
     grid = gtk_grid_new();
 
