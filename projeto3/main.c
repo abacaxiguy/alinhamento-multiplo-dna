@@ -31,6 +31,7 @@ static int max_string_size;
 
 GtkWidget *window;
 GtkWidget *scrolled_window;
+GtkWidget *headerbar;
 
 void load_css()
 {
@@ -216,7 +217,7 @@ alinha_sequencias(GtkWidget *widget,
         sprintf(score_signed, "%d", score[0]);
     }
 
-    char score_string[81];
+    char score_string[164];
     sprintf(score_string, "SCORE:\n((α * %d) + (β * %d) + (δ * %d)) + %d - %d = %s", score[1], score[2], score[3], score[4], score[5], score_signed);
 
     GtkWidget *label = gtk_label_new(score_string);
@@ -224,10 +225,12 @@ alinha_sequencias(GtkWidget *widget,
     gtk_grid_attach(GTK_GRID(data), label, 0, 0, 1, 1);
     gtk_widget_set_halign(label, GTK_ALIGN_START);
 
-    GtkWidget *info_button = gtk_button_new_with_label("Saiba mais");
-    gtk_widget_set_name(info_button, "info");
-    gtk_grid_attach(GTK_GRID(data), info_button, 1, 0, 1, 1);
-    g_signal_connect(info_button, "clicked", G_CALLBACK(info_button_clicked), info);
+    // create <small>
+    GtkWidget *small = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(small), "Para mais informações, clique no botão de ajuda!");
+    gtk_widget_set_name(small, "small");
+    gtk_grid_attach(GTK_GRID(data), small, 0, 1, 1, 1);
+    gtk_widget_set_halign(small, GTK_ALIGN_START);
 
     int i;
     for (i = 0; i < sequencias_ativas; i++) {
@@ -253,7 +256,7 @@ alinha_sequencias(GtkWidget *widget,
         }
 
         gtk_widget_set_name(container, "container");
-        gtk_grid_attach(GTK_GRID(data), container, 0, i+1, 1, 1);
+        gtk_grid_attach(GTK_GRID(data), container, 0, i+2, 1, 1);
     }
     gtk_grid_set_row_spacing(GTK_GRID(data), 0);
     gtk_widget_show_all(data);
@@ -435,11 +438,20 @@ activate(GtkApplication *app,
     gtk_container_set_border_width(GTK_CONTAINER(window), 20);
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 
-    // scrollable window
     scrolled_window = gtk_scrolled_window_new(NULL, NULL);
     gtk_container_add(GTK_CONTAINER(window), scrolled_window);
-    // only vertical
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+
+    headerbar = gtk_header_bar_new();
+    gtk_header_bar_set_title(GTK_HEADER_BAR(headerbar), "Alinhamento de Sequências");
+    gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(headerbar), TRUE);
+    gtk_header_bar_set_has_subtitle(GTK_HEADER_BAR(headerbar), FALSE);
+    gtk_header_bar_set_decoration_layout(GTK_HEADER_BAR(headerbar), "close:menu");
+    gtk_window_set_titlebar(GTK_WINDOW(window), headerbar);
+
+    GtkWidget *info_button = gtk_button_new_from_icon_name("dialog-information", GTK_ICON_SIZE_BUTTON);
+    gtk_header_bar_pack_end(GTK_HEADER_BAR(headerbar), info_button);
+    g_signal_connect(info_button, "clicked", G_CALLBACK(info_button_clicked), NULL);
 
     grid = gtk_grid_new();
 
@@ -477,7 +489,7 @@ activate(GtkApplication *app,
 
     // space
     GtkWidget *space = gtk_label_new(" ");
-    gtk_grid_attach(GTK_GRID(grid), space, 0, 12, 4, 1);
+    gtk_grid_attach(GTK_GRID(grid), space, 0, 12, 1, 1);
 
     button = gtk_button_new_with_label("Alinhar");
     g_signal_connect(button, "clicked", G_CALLBACK(alinha_sequencias), grid);

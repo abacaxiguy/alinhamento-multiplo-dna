@@ -62,7 +62,6 @@ checkbutton:checked check {
 grid #score {
     color: #212121;
     font-size: 30px;
-    margin-bottom: 30px;
 }
 
 grid .letter {
@@ -74,14 +73,10 @@ grid .letter {
     font-size: 30px;
 }
 
-grid #info{
-    font-size: 15px;
-    background-color: rgb(43, 43, 204);
-    color: white;
+#small{
+    color: #505050;
     margin-bottom: 30px;
-    margin-left: 30px;
-    border: none;
-}   
+}
 
 grid #a {
     background-color: rgb(167, 54, 54);
