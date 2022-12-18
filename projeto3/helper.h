@@ -337,7 +337,7 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
 }
 
 // Calcula o score da sequencia atual
-void calcular_score(char sequencias[10][103], int lin, int col)
+int calcular_score(char sequencias[10][103], int lin, int col)
 {
     int score = 0, alpha = 0, beta = 0, delta = 0;
 
@@ -417,6 +417,8 @@ void calcular_score(char sequencias[10][103], int lin, int col)
     printf("\nFÓRMULA = score + pGapsFinais - pGapsJuntos\n");
     printf("\nSCORE FINAL: ");
     score > 0 ? printf("+%d\n", score) : printf("%d\n", score);
+
+    return score;
 }
 
 // Pega a sequencia enviada pelo usuario e verifica se é valida

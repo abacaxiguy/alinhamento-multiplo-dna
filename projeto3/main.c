@@ -4,16 +4,16 @@
 #include "helper.h"
 #include <gtk/gtk.h> 
 
-static char seq1[101];
-static char seq2[101];
-static char seq3[101];
-static char seq4[101];
-static char seq5[101];
-static char seq6[101];
-static char seq7[101];
-static char seq8[101];
-static char seq9[101];
-static char seq10[101];
+static char seq1[103];
+static char seq2[103];
+static char seq3[103];
+static char seq4[103];
+static char seq5[103];
+static char seq6[103];
+static char seq7[103];
+static char seq8[103];
+static char seq9[103];
+static char seq10[103];
 
 static int active1 = 1;
 static int active2 = 1;
@@ -145,7 +145,7 @@ alinha_sequencias(GtkWidget *widget,
 {
     if (!valida_sequencias()) return;
 
-    char sequencias[sequencias_ativas][101];
+    char sequencias[sequencias_ativas][103];
 
     strcpy(sequencias[0], seq1);
     strcpy(sequencias[1], seq2);
@@ -158,15 +158,36 @@ alinha_sequencias(GtkWidget *widget,
     if (active9) strcpy(sequencias[8], seq9);
     if (active10) strcpy(sequencias[9], seq10);
 
+    // remove all widgets in grid
+    gtk_container_foreach(GTK_CONTAINER(data), (GtkCallback)gtk_widget_destroy, NULL);
+
     g_print("\nVocê digitou %d sequencias com tamanho máximo de %d caracteres\n", sequencias_ativas, max_string_size);
 
-    for (int i = 0; i < sequencias_ativas; i++)
-    {
-        printf("%s\n", sequencias[i]);
-    }
+    imprimirSequencia(sequencias, sequencias_ativas);
 
-    // remove all widgets in grid
-    gtk_container_foreach(GTK_CONTAINER(data), (GtkCallback) gtk_widget_destroy, NULL);
+    g_print("\nAlinhamento com gaps no final:\n\n");
+    preencheGapFinal(sequencias, sequencias_ativas, &max_string_size);
+
+    imprimirSequencia(sequencias, sequencias_ativas);
+
+    alinhaSequencias(sequencias, max_string_size, sequencias_ativas);
+
+    g_print("\nMelhor alinhamento:\n\n");
+
+    imprimirSequencia(sequencias, sequencias_ativas);
+
+    printf("\n");
+
+    int score = calcular_score(sequencias, sequencias_ativas, max_string_size);
+
+    char score_string[10];
+    sprintf(score_string, "SCORE: %d", score);
+
+    GtkWidget *label = gtk_label_new(score_string);
+
+    gtk_grid_attach(GTK_GRID(data), label, 0, 0, 1, 1);
+
+    gtk_widget_show_all(data);
 }
 
 static void on_sequencia_changed(GtkWidget *widget, gpointer data)
@@ -346,7 +367,6 @@ activate(GtkApplication *app,
 
     GtkWidget *check1, *check2, *check3, *check4, *check5, *check6, *check7, *check8, *check9, *check10;
 
-    /* create a new window, and set its title */
     window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW(window), "Alinhamento Múltiplo de Sequências");
     gtk_window_set_default_size(GTK_WINDOW(window), 1000, 400);
