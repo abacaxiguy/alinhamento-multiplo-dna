@@ -337,7 +337,7 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
 }
 
 // Calcula o score da sequencia atual
-int *calcular_score(char sequencias[10][103], int lin, int col, int *info)
+int *calcular_score(char sequencias[10][103], int lin, int col, int info)
 {
     int score = 0, alpha = 0, beta = 0, delta = 0;
 
