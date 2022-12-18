@@ -135,8 +135,8 @@ grid #n {
     color: #212121;
 }
 grid #o {
-    background-color: rgb(233, 233, 96);
-    color: #212121;
+    background-color: #381023;
+    color: white;
 }
 grid #p {
     background-color: rgb(233, 233, 233);
@@ -147,8 +147,8 @@ grid #q {
     color: white;
 }
 grid #r {
-    background-color: rgb(6, 12, 6);
-    color: white;
+    background-color: rgb(255, 255, 0);
+    color: #212121;
 }
 grid #s {
     background-color: rgb(6, 65, 12);
@@ -179,6 +179,6 @@ grid #y {
     color: white;
 }
 grid #z {
-    background-color: rgb(6, 6, 6);
+    background-color: rgb(0, 0, 0);
     color: white;
 }
