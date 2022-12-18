@@ -1,0 +1,189 @@
+window, dialog {
+    background-color: #fab700;
+    color: #212121;
+    font-family: "Inter", sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+}
+
+grid button,
+dialog button {
+    border-image: none;
+    background-image: none;
+    background: #212121;
+    color: #fab700;
+    border-width: 3px;
+    border-style: solid;
+    border-color: #fab700;
+    padding: 8px 16px;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+grid button:active {
+    border-color: #212121;
+    background-color: #212121;
+    color: #fab700;
+}
+
+grid entry {
+    background-color: transparent;
+    border: 3px solid #000000;
+    border-radius: 4px;
+    color: white;
+}
+
+grid entry:disabled {
+    background-color: #212121;
+    color: #fab700;
+    border-color: transparent;
+}
+
+grid entry:focus {
+    border: 3px solid #212121;
+}
+
+grid #title {
+    font-weight: 900;
+    font-size: 25px;
+}
+
+checkbutton check {
+    background: white;
+    border: 2px solid #212121;
+}
+
+checkbutton:checked check {
+    background: #212121;
+    border-color: #212121;
+    color: #fab700;
+}
+
+grid #score {
+    color: #212121;
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+grid .letter {
+    background-color: white;
+    color: #212121;
+    border-color: transparent;
+    min-width: 40px;
+    padding: 5px 0;
+    font-size: 30px;
+}
+
+grid #info{
+    font-size: 15px;
+    background-color: rgb(43, 43, 204);
+    color: white;
+    margin-bottom: 30px;
+    margin-left: 30px;
+    border: none;
+}   
+
+grid #a {
+    background-color: rgb(167, 54, 54);
+    color: white;
+}
+grid #b {
+    background-color: rgb(167, 54, 167);
+    color: white;
+}
+grid #c {
+    background-color: rgb(54, 54, 167);
+    color: white;
+}
+grid #d {
+    background-color: rgb(54, 167, 101);
+    color: #212121;
+}
+grid #e {
+    background-color: rgb(54, 167, 167);
+    color: #212121;
+}
+grid #f {
+    background-color: rgb(219, 175, 51);
+    color: #212121;
+}
+grid #g {
+    background-color: rgb(219, 175, 175);
+    color: #212121;
+}
+grid #h {
+    background-color: rgb(175, 175, 175);
+    color: #212121;
+}
+grid #i {
+    background-color: rgb(121, 82, 196);
+    color: white;
+}
+grid #j {
+    background-color: rgb(233, 96, 17);
+    color: #212121;
+}
+grid #k {
+    background-color: rgb(233, 96, 233);
+    color: #212121;
+}
+grid #l {
+    background-color: rgb(96, 96, 233);
+    color: white;
+}
+grid #m {
+    background-color: rgb(96, 233, 96);
+    color: #212121;
+}
+grid #n {
+    background-color: rgb(96, 233, 233);
+    color: #212121;
+}
+grid #o {
+    background-color: rgb(233, 233, 96);
+    color: #212121;
+}
+grid #p {
+    background-color: rgb(233, 233, 233);
+    color: #212121;
+}
+grid #q {
+    background-color: rgb(6, 12, 65);
+    color: white;
+}
+grid #r {
+    background-color: rgb(6, 12, 6);
+    color: white;
+}
+grid #s {
+    background-color: rgb(6, 65, 12);
+    color: white;
+}
+grid #t {
+    background-color: rgb(6, 65, 65);
+    color: white;
+}
+grid #u {
+    background-color: rgb(65, 65, 6);
+    color: white;
+}
+grid #v {
+    background-color: rgb(65, 65, 65);
+    color: white;
+}
+grid #w {
+    background-color: rgb(65, 6, 6);
+    color: white;
+}
+grid #x {
+    background-color: rgb(65, 6, 65);
+    color: white;
+}
+grid #y {
+    background-color: rgb(6, 6, 65);
+    color: white;
+}
+grid #z {
+    background-color: rgb(6, 6, 6);
+    color: white;
+}
