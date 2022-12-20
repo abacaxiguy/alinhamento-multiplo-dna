@@ -56,5 +56,6 @@ dkms.conf
 *
 !/**/
 !*.*
+!Makefile
 
 .cph/
