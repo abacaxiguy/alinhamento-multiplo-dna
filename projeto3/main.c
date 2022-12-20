@@ -4,16 +4,16 @@
 #include "helper.h"
 #include <gtk/gtk.h> 
 
-static char seq1[103];
-static char seq2[103];
-static char seq3[103];
-static char seq4[103];
-static char seq5[103];
-static char seq6[103];
-static char seq7[103];
-static char seq8[103];
-static char seq9[103];
-static char seq10[103];
+static char seq1[123];
+static char seq2[123];
+static char seq3[123];
+static char seq4[123];
+static char seq5[123];
+static char seq6[123];
+static char seq7[123];
+static char seq8[123];
+static char seq9[123];
+static char seq10[123];
 
 static int active1 = 1;
 static int active2 = 1;
@@ -172,7 +172,7 @@ alinha_sequencias(GtkWidget *widget,
 {
     if (!valida_sequencias()) return;
 
-    char sequencias[sequencias_ativas][103];
+    char sequencias[sequencias_ativas][123];
 
     strcpy(sequencias[0], seq1);
     strcpy(sequencias[1], seq2);

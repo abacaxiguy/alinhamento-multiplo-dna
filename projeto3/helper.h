@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 #define ALPHA 2 // A + A
-#define BETA -1 // A + T
+#define BETA 0 // A + T
 #define DELTA 1 // A + - // - + -
 
 // Para funcionar de uma maneira que seja mais fácil de visualizar o alinhamento,
@@ -73,7 +73,7 @@ void resetaVetor(char vet[])
 }
 
 // Copia uma coluna especificada da matriz p/ um vetor
-void copiaColuna(char seq[][103], char vetCopia[], int max, int nSeq, int numColuna)
+void copiaColuna(char seq[][123], char vetCopia[], int max, int nSeq, int numColuna)
 {
 
     // Limpa o vetor
@@ -147,7 +147,7 @@ No *devolveMaiorScore(No *pai, int nSeq)
 
 // Essa função recebe uma sequencia, o tamanho max da sequencia e um índice.
 // coloca todos os gaps que estão no final da sequencia p/ uma posição específica.
-void trocaPosicaoGapFinal(char matriz[][103], int linha, int indice, int max)
+void trocaPosicaoGapFinal(char matriz[][123], int linha, int indice, int max)
 {
     for (int i = max - 1; i > indice; i--)
     {
@@ -157,7 +157,7 @@ void trocaPosicaoGapFinal(char matriz[][103], int linha, int indice, int max)
     matriz[linha][indice] = '-';
 }
 
-void alinhaSequencias(char seq[][103], int max, int nSeq)
+void alinhaSequencias(char seq[][123], int max, int nSeq)
 {
 
     // printf("Numero de sequencias:%d\n", nSeq);
@@ -296,7 +296,7 @@ int verificaCharValidos(char seq[])
     return 1;
 }
 
-void preencheGapFinal(char seq[][103], int cont, int *maxSize)
+void preencheGapFinal(char seq[][123], int cont, int *maxSize)
 {
     // checar se todas as sequencias possuem o mesmo tamanho
     int mesmoTamanho = 1;
@@ -310,14 +310,18 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
     }
     if (mesmoTamanho)
     {
-        // preencher dois gaps no final de cada sequencia
+        int qntGaps = (int)*maxSize / 10;
+        if (qntGaps == 0) qntGaps = 1;
         for (int i = 0; i < cont; i++)
         {
-            seq[i][*maxSize] = '-';
-            seq[i][*maxSize + 1] = '\0';
+            for (int j = 0; j < qntGaps; j++)
+            {
+                seq[i][*maxSize + j] = '-';
+            }
+            seq[i][*maxSize + qntGaps] = '\0';
         }
 
-        *maxSize += 1;
+        *maxSize += qntGaps;
     }
 
     else
@@ -337,7 +341,7 @@ void preencheGapFinal(char seq[][103], int cont, int *maxSize)
 }
 
 // Calcula o score da sequencia atual
-int *calcular_score(char sequencias[10][103], int lin, int col, int info[6])
+int *calcular_score(char sequencias[10][123], int lin, int col, int info[6])
 {
     int score = 0, alpha = 0, beta = 0, delta = 0;
 
@@ -429,7 +433,7 @@ int *calcular_score(char sequencias[10][103], int lin, int col, int info[6])
 }
 
 // Pega a sequencia enviada pelo usuario e verifica se é valida
-void pegandoSequencia(char sequencias[][103], int sequencias_count, int *max_string_size)
+void pegandoSequencia(char sequencias[][123], int sequencias_count, int *max_string_size)
 {
     system("clear");
     for (int i = 0; i < sequencias_count; i++)
@@ -460,7 +464,7 @@ void pegandoSequencia(char sequencias[][103], int sequencias_count, int *max_str
     }
 }
 
-void imprimirSequencia(char sequencia[][103], int tamanhoSequencia)
+void imprimirSequencia(char sequencia[][123], int tamanhoSequencia)
 {
     for (int i = 0; i < tamanhoSequencia; i++)
     {
