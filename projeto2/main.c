@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 #define ALPHA 2 // A + A
-#define BETA -1 // A + T
+#define BETA 0 // A + T
 #define DELTA 1 // A + - // - + -
 
 // Para funcionar de uma maneira que seja mais fácil de visualizar o alinhamento, 
