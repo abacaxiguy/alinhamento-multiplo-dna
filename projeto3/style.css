@@ -1,18 +1,25 @@
+* {
+    box-shadow: none;
+}
+
 window, dialog {
-    background-color: #fab700;
-    color: #212121;
+    background-color: #212121;
     font-family: "Inter", sans-serif;
     font-weight: 900;
     font-size: 16px;
+}
+
+grid, dialog {
+    color: white;
 }
 
 grid button,
 dialog button {
     border-image: none;
     background-image: none;
-    background: #212121;
-    color: #fab700;
-    border-width: 3px;
+    background: #fab700;
+    color: #212121;
+    border-width: 0px;
     border-style: solid;
     border-color: #fab700;
     padding: 8px 16px;
@@ -21,26 +28,27 @@ dialog button {
 }
 
 grid button:active {
-    border-color: #212121;
-    background-color: #212121;
-    color: #fab700;
+    border-color: #fab700;
+    background-color: #fab700;
+    color: #212121;
 }
 
 grid entry {
     background-color: transparent;
-    border: 3px solid #000000;
+    border: 3px solid #fab700;
     border-radius: 4px;
     color: white;
 }
 
 grid entry:disabled {
-    background-color: #212121;
-    color: #fab700;
+    background-color: #fab700;
+    color: white;
     border-color: transparent;
 }
 
 grid entry:focus {
-    border: 3px solid #212121;
+    outline-width: 0px;
+    outline: none;
 }
 
 grid #title {
@@ -50,17 +58,17 @@ grid #title {
 
 checkbutton check {
     background: white;
-    border: 2px solid #212121;
+    border: 2px solid #fab700;
 }
 
 checkbutton:checked check {
-    background: #212121;
-    border-color: #212121;
-    color: #fab700;
+    background: #fab700;
+    border-color: #fab700;
+    color: #212121;
 }
 
 grid #score {
-    color: #212121;
+    color: white;
     font-size: 30px;
 }
 
@@ -74,7 +82,7 @@ grid .letter {
 }
 
 #small{
-    color: #505050;
+    color: #979797;
     margin-bottom: 30px;
 }
 
@@ -179,6 +187,6 @@ grid #y {
     color: white;
 }
 grid #z {
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(168, 133, 133);
     color: white;
 }
