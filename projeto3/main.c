@@ -63,6 +63,7 @@ void quick_message(GtkWindow *parent, gchar *type, gchar *message)
     dialog = gtk_dialog_new_with_buttons(type, parent, flags, "OK", GTK_RESPONSE_NONE, NULL);
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     label = gtk_label_new(message);
+    gtk_widget_set_name(label, "message");
     gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
 
     // Ensure that the dialog box is destroyed when the user responds

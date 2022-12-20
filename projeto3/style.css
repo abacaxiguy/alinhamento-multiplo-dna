@@ -9,7 +9,7 @@ window, dialog {
     font-size: 16px;
 }
 
-grid, dialog {
+grid, #message {
     color: white;
 }
 
@@ -68,7 +68,7 @@ checkbutton:checked check {
 }
 
 grid #score {
-    color: white;
+    color: #fab700;
     font-size: 30px;
 }
 
