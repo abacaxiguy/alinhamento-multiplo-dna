@@ -3,45 +3,45 @@
 }
 
 window, dialog {
-    background-color: #212121;
+    background-color: #1E1E2E;
     font-family: "Inter", sans-serif;
     font-weight: 900;
     font-size: 16px;
 }
 
 grid, #message {
-    color: white;
+    color: #d9e0ee;
 }
 
 grid button,
 dialog button {
     border-image: none;
     background-image: none;
-    background: #fab700;
-    color: #212121;
+    background: #ABE9B3;
+    color: #1E1E2E;
     border-width: 0px;
     border-style: solid;
-    border-color: #fab700;
+    border-color: #ABE9B3;
     padding: 8px 16px;
     font-weight: 900;
-    text-decoration: none;
+    text-decoration: wavy;
 }
 
 grid button:active {
-    border-color: #fab700;
-    background-color: #fab700;
-    color: #212121;
+    border-color: #ABE9B3;
+    background-color: #ABE9B3;
+    color: #1E1E2E;
 }
 
 grid entry {
     background-color: transparent;
-    border: 3px solid #fab700;
+    border: 3px solid #ABE9B3;
     border-radius: 4px;
     color: white;
 }
 
 grid entry:disabled {
-    background-color: #fab700;
+    background-color: #ABE9B3;
     color: white;
     border-color: transparent;
 }
@@ -58,23 +58,23 @@ grid #title {
 
 checkbutton check {
     background: white;
-    border: 2px solid #fab700;
+    border: 2px solid #ABE9B3;
 }
 
 checkbutton:checked check {
-    background: #fab700;
-    border-color: #fab700;
-    color: #212121;
+    background: #ABE9B3;
+    border-color: #ABE9B3;
+    color: #1E1E2E;
 }
 
 grid #score {
-    color: #fab700;
+    color: #ABE9B3;
     font-size: 30px;
 }
 
 grid .letter {
     background-color: white;
-    color: #212121;
+    color: #1E1E2E;
     border-color: transparent;
     min-width: 40px;
     padding: 5px 0;
@@ -100,23 +100,23 @@ grid #c {
 }
 grid #d {
     background-color: rgb(54, 167, 101);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #e {
     background-color: rgb(54, 167, 167);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #f {
     background-color: rgb(219, 175, 51);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #g {
     background-color: rgb(219, 175, 175);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #h {
     background-color: rgb(175, 175, 175);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #i {
     background-color: rgb(121, 82, 196);
@@ -124,11 +124,11 @@ grid #i {
 }
 grid #j {
     background-color: rgb(233, 96, 17);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #k {
     background-color: rgb(233, 96, 233);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #l {
     background-color: rgb(96, 96, 233);
@@ -136,11 +136,11 @@ grid #l {
 }
 grid #m {
     background-color: rgb(96, 233, 96);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #n {
     background-color: rgb(96, 233, 233);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #o {
     background-color: #381023;
@@ -148,7 +148,7 @@ grid #o {
 }
 grid #p {
     background-color: rgb(233, 233, 233);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #q {
     background-color: rgb(6, 12, 65);
@@ -156,7 +156,7 @@ grid #q {
 }
 grid #r {
     background-color: rgb(255, 255, 0);
-    color: #212121;
+    color: #1E1E2E;
 }
 grid #s {
     background-color: rgb(6, 65, 12);
