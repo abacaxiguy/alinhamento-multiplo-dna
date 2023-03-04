@@ -33,7 +33,7 @@ O projeto possui 3 partes, cada uma possui algo diferente, mas todas servem para
 <details>
     <summary>📝 Mais detalhes sobre como funciona</summary>
     <br>
-    Essas foram as instruções dadas para o projeto:
+    <h3>Essas foram as instruções dadas para o projeto:</h3>
 
     Implemente um programa que realiza a operação de alinhamento múltiplo de DNA com
     uma estrutura que permita a o alinhamento de 10 sequências com tamanho igual à
